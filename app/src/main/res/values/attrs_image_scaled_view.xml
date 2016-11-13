@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ImageScaled">
+        <attr name="scale" format="float"/>
+        <attr name="screenPercent" format="float"/>
+    </declare-styleable>
+</resources>
