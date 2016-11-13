@@ -16,10 +16,10 @@ public class DSIntroPage extends AppIntro {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addSlide(AppIntroFragment.newInstance("sample", "check", R.drawable.common_full_open_on_phone, getResources().getColor(R.color.colorAccent)));
-        addSlide(AppIntroFragment.newInstance("sample", "check", R.drawable.common_full_open_on_phone, getResources().getColor(R.color.colorPrimary)));
-        addSlide(AppIntroFragment.newInstance("sample", "check", R.drawable.common_full_open_on_phone, getResources().getColor(R.color.colorPrimaryDark)));
-        addSlide(AppIntroFragment.newInstance("sample", "check", R.drawable.common_full_open_on_phone, getResources().getColor(R.color.common_action_bar_splitter)));
+        addSlide(AppIntroFragment.newInstance("Super Smart", "The worlds first super smart data securing application", R.drawable.common_full_open_on_phone, getResources().getColor(R.color.material_black)));
+        addSlide(AppIntroFragment.newInstance("Secure Storing", "Stores data in your own phone itself", R.drawable.common_full_open_on_phone, getResources().getColor(R.color.material_blue_green)));
+        addSlide(AppIntroFragment.newInstance("Complete Protection", "blalll blaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", R.drawable.common_full_open_on_phone, getResources().getColor(R.color.material_violet_light)));
+        addSlide(AppIntroFragment.newInstance("All Done", "Let :)", R.drawable.common_full_open_on_phone, getResources().getColor(R.color.material_red_light)));
 
         // OPTIONAL METHODS
         // Override bar/separator color.
