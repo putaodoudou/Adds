@@ -2,45 +2,34 @@ package com.adds.database;
 
 class DSDatabaseFieldNames {
 
-    public static final String TAG_ID = "_id";
+    /**
+     * Bank Account modal
+     */
+    public static final String BANK_NAME = "bankName";
+    public static final String ACC_NAME = "accName";
+    public static final String ACC_PASSWORD = "accPwd";
+    public static final String ACC_NO = "accNo";
+    public static final String IFSC_CODE = "ifscCode";
+    public static final String REMARKS = "remarks";
 
-    public static final String TAG_AREA_ID = "AreaID";
-    public static final String TAG_AREA_NAME = "AreaName";
-    public static final String TAG_CITY_ID = "CityID";
-    public static final String TAG_CITY_NAME = "CityName";
-    public static final String TAG_SUB_CAT_ID = "SubCatID";
-    public static final String TAG_CAT_ID_SUB = "CatIDSub";
-    public static final String TAG_SUB_CAT_NAME = "SubCatName";
-    public static final String TAG_CAT_ID = "CatID";
-    public static final String TAG_CAT_NAME = "CatName";
-    public static final String TAG_CAT_ICON = "CatIcon";
+    /**
+     * Card Modal
+     */
+    public static final String CARD_NAME = "cardName";
+    public static final String CARD_NO = "cardNo";
+    public static final String CARD_PIN = "cardPin";
+    public static final String CVV_CODE = "cvvCode";
 
-    //branch table
-    public static final String TAG_BRANCH_ID = "BranchID";
-    public static final String TAG_BRANCH_NAME = "BranchName";
-    public static final String TAG_BRANCH_PHONE = "BranchPhone";
-    public static final String TAG_BRANCH_ADDRESS = "BranchAddress";
-    public static final String TAG_BRANCH_CITY = "BranchCity";
-    public static final String TAG_BRANCH_AREA = "BranchArea";
-    public static final String TAG_BRANCH_DESCRIPTION = "BranchDescription";
-    public static final String TAG_BRANCH_IMAGE = "BranchImage";
-    public static final String TAG_BRANCH_MAP = "BranchMap";
-    public static final String TAG_BRANCH_LAT = "BranchLat";
-    public static final String TAG_BRANCH_LONG = "BranchLong";
+    /**
+     * Login account modal
+     */
+    public static final String LOGIN_NAME = "loginName";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
 
-    //business table
-    public static final String TAG_BUS_ID = "BusinessId";
-    public static final String TAG_BUS_NAME = "BusinessName";
-    public static final String TAG_BUS_EMAIL = "BusinessEmail";
-    public static final String TAG_BUS_FB = "BusinessFb";
-    public static final String TAG_BUS_TWITTER = "BusinessTwitter";
-    public static final String TAG_BUS_INSTAGRAM = "BusinessInstagram";
-    public static final String TAG_BUS_SPONSOR = "BusinessSponsor";
-    public static final String TAG_BUS_TAGS = "BusinessTags";
-    public static final String TAG_BUS_REG_ID = "BusinessRegId";
-    public static final String TAG_BUS_DATE_TIME = "BusinessDateTime";
-    public static final String TAG_BUS_MOBILE = "BusinessMobile";
-    public static final String TAG_BUS_OFFICE = "BusinessOffice";
-
-
+    /**
+     * Other data modal
+     */
+    public static final String OTHER_DATA_NAME = "otherDataName";
+    public static final String OTHER_DATA = "otherData";
 }

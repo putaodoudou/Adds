@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
  * Service for detecting rooted device on boot
  * and if rooted, keyStore file will be deleted.
  *
- * @author cs94758
+ * @author Rolbin
  */
 public class DSRootDetectionService extends IntentService {
 

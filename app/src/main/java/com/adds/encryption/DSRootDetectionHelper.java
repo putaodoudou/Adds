@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * Helper class for detecting Rooted devices.
  *
- * @author cs94758
+ * @author Rolbin
  */
 public class DSRootDetectionHelper {
 	/**
@@ -20,10 +20,7 @@ public class DSRootDetectionHelper {
 		if (getBuildInfo()) {
 			return true;
 		}
-		if (getSuperUserInfo()) {
-			return true;
-		}
-		return false;
+		return getSuperUserInfo();
 	}
 
 
@@ -34,10 +31,7 @@ public class DSRootDetectionHelper {
 	private static boolean getBuildInfo() {
 		//
 		String buildTags = android.os.Build.TAGS;
-		if (buildTags != null && buildTags.contains("test-keys")) {
-			return true;
-		}
-		return false;
+		return buildTags != null && buildTags.contains("test-keys");
 	}
 
 	/**

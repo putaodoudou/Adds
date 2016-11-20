@@ -7,7 +7,7 @@ import android.content.Intent;
 /**
  * Broadcast Receiver to listen for boot complete intents.
  *
- * @author cs94758
+ * @author Rolbin
  */
 public class DSBootCompleteListener extends BroadcastReceiver {
 
