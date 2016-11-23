@@ -20,48 +20,51 @@ public class DSBankAccModal {
         this.mRemarks = mRemarks;
     }
 
+    public DSBankAccModal() {
+    }
+
     public String getmAccountName() {
         return mAccountName;
-    }
-
-    public String getmBankName() {
-        return mBankName;
-    }
-
-    public String getmPassword() {
-        return mPassword;
-    }
-
-    public String getmAccNo() {
-        return mAccNo;
-    }
-
-    public String getmIfscCode() {
-        return mIfscCode;
-    }
-
-    public String getmRemarks() {
-        return mRemarks;
     }
 
     public void setmAccountName(String mAccountName) {
         this.mAccountName = mAccountName;
     }
 
+    public String getmBankName() {
+        return mBankName;
+    }
+
     public void setmBankName(String mBankName) {
         this.mBankName = mBankName;
+    }
+
+    public String getmPassword() {
+        return mPassword;
     }
 
     public void setmPassword(String mPassword) {
         this.mPassword = mPassword;
     }
 
+    public String getmAccNo() {
+        return mAccNo;
+    }
+
     public void setmAccNo(String mAccNo) {
         this.mAccNo = mAccNo;
     }
 
+    public String getmIfscCode() {
+        return mIfscCode;
+    }
+
     public void setmIfscCode(String mIfscCode) {
         this.mIfscCode = mIfscCode;
+    }
+
+    public String getmRemarks() {
+        return mRemarks;
     }
 
     public void setmRemarks(String mRemarks) {
