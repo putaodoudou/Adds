@@ -10,9 +10,9 @@ import android.preference.PreferenceManager;
  */
 public class DSSharedPreferencUtils {
 
-    private static Context context = DSApplication.getApplicationContext();
+    private static Context context = DSApplication.getInstance();
 
-    public static synchronized String getPref(String id) {
+    public static synchronized String getPref(String id, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(id, "");
     }
@@ -44,7 +44,7 @@ public class DSSharedPreferencUtils {
         return preferences.getLong(id, 0L);
     }
 
-    public static synchronized void setPref(String id, String valStr) {
+    public static synchronized void setPref(String id, String valStr, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(id, valStr);

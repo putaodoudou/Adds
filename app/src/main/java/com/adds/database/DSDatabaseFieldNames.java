@@ -1,6 +1,6 @@
 package com.adds.database;
 
-class DSDatabaseFieldNames {
+public class DSDatabaseFieldNames {
 
     /**
      * Bank Account modal

@@ -1,10 +1,10 @@
 package com.adds.userInterface.applicationUI;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +17,8 @@ import android.widget.ExpandableListView;
 
 import com.adds.R;
 import com.adds.adapters.DSExpandableListviewAdapter;
+import com.adds.authentication.DSPermissionsHelper;
+import com.adds.authentication.DSPermissionsHelper.PermissionsCallback;
 import com.adds.modalClasses.DSBankAccModal;
 import com.adds.modalClasses.DSCardModal;
 import com.adds.modalClasses.DSChildModal;
@@ -27,11 +29,11 @@ import com.adds.userInterface.customViews.DSCustomInputDialog;
 
 import java.util.ArrayList;
 
-public class DSDashBoard extends AppCompatActivity
-        implements OnNavigationItemSelectedListener {
+public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSelectedListener, PermissionsCallback {
 
     private ExpandableListView mExpListView;
     private DSExpandableListviewAdapter mExpandableListAdapter;
+    private DSPermissionsHelper mPermissionsHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +42,22 @@ public class DSDashBoard extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mPermissionsHelper = new DSPermissionsHelper(this, this);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (mPermissionsHelper.hasPermisson(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    showInputPopup();
+                } else {
+                    mPermissionsHelper.requestPermissionActivity(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                DSCustomInputDialog inputDialog = new DSCustomInputDialog();
-                inputDialog.show(getFragmentManager(),"dialog");
+
 
             }
         });
@@ -108,6 +118,20 @@ public class DSDashBoard extends AppCompatActivity
         });
     }
 
+    private void showInputPopup() {
+        DSCustomInputDialog inputDialog = new DSCustomInputDialog();
+        Bundle bundle = new Bundle();
+        ArrayList<String> list = new ArrayList<>();
+        list.add("sadsd");
+        list.add("sadsd");
+        list.add("sadsd");
+        list.add("sadsd");
+        list.add("sadsd");
+        bundle.putStringArrayList("data", list);
+        inputDialog.setArguments(bundle);
+        inputDialog.show(getFragmentManager(), "dialog");
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -163,5 +187,15 @@ public class DSDashBoard extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void permissionGranted(String[] permissions) {
+        showInputPopup();
+    }
+
+    @Override
+    public void permissionDenied(String[] permissions) {
+
     }
 }

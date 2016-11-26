@@ -9,7 +9,6 @@ import android.util.Base64;
 import com.adds.application.DSApplication;
 import com.adds.application.DSSharedPreferencUtils;
 import com.adds.authentication.DSAuthenticationConstants;
-import com.google.android.gms.iid.InstanceID;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -94,10 +93,10 @@ public class DSCryptographyHelper {
 
         if (keyStoreFile.exists()) {
             //Delete InstanceId which is used as keystore password.
-            DeleteInstanceId deleteInstanceId = new DeleteInstanceId();
-            deleteInstanceId.execute();
+//            DeleteInstanceId deleteInstanceId = new DeleteInstanceId();
+//            deleteInstanceId.execute();
             //Reset all values.
-            DSSharedPreferencUtils.setPref(DSAuthenticationConstants.AUTHCONSTANTS.SECRETKEY_ALIASNAME, "");
+            DSSharedPreferencUtils.setPref(DSAuthenticationConstants.AUTHCONSTANTS.SECRETKEY_ALIASNAME, "", context);
             return keyStoreFile.delete();
         }
         return true;
@@ -116,11 +115,12 @@ public class DSCryptographyHelper {
 
         //KeyStore password (Instance id, Unique for an application and once deleted it
         // generates a new id for application).
-        String instanceId = InstanceID.getInstance(context).getId();
+//        String instanceId = InstanceID.getInstance(context).getId();
+        String instanceId = "rolbin";
         char[] keyStorePassword = instanceId.toCharArray();
 
         File keyStoreFile = getKeyStoreFile(context);
-        if (!keyStoreFile.exists()) {
+        if (!keyStoreFile.exists() || keyStoreFile.length() == 0) {
             keyStoreFile.createNewFile();
             keyStore.load(null, keyStorePassword);
         } else {
@@ -170,7 +170,7 @@ public class DSCryptographyHelper {
                 Settings.Secure.ANDROID_ID).toCharArray();
 
         //Alias name to store the secretKey.
-        String aliasName = getAliasName(keyStore);
+        String aliasName = getAliasName(keyStore, context);
         keyStore.setKeyEntry(aliasName, secretKey, secretKeyPassword, null);
 
         //Fill keyStore file with some random keys to confuse hackers
@@ -179,7 +179,8 @@ public class DSCryptographyHelper {
         //Save Keystore into a file.
         File keyStoreFile = getKeyStoreFile(context);
         FileOutputStream outputStream = new FileOutputStream(keyStoreFile);
-        String instanceId = InstanceID.getInstance(context).getId();
+//        String instanceId = InstanceID.getInstance(context).getId();
+        String instanceId = "rolbin";
         char[] keyStorePassword = instanceId.toCharArray();
         keyStore.store(outputStream, keyStorePassword);
         if (outputStream != null) {
@@ -203,7 +204,7 @@ public class DSCryptographyHelper {
      *
      * @param keyStore
      */
-    private static String getAliasName(KeyStore keyStore) throws IOException, NoSuchAlgorithmException,
+    private static String getAliasName(KeyStore keyStore, Context context) throws IOException, NoSuchAlgorithmException,
             IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchPaddingException, CertificateException, KeyStoreException {
 
         //Random UUID as alias name.
@@ -213,13 +214,13 @@ public class DSCryptographyHelper {
         //Encrypt alias name.
         byte[] encryptedAliasName = encrypt(aliasSecretKey, aliasName.getBytes("UTF-8"));
         //aliasName alias
-        String aliasKeyAliasName = Base64.encodeToString(DSApplication.getApplicationContext().getClass().getName().getBytes("UTF-8"), Base64.DEFAULT);
+        String aliasKeyAliasName = Base64.encodeToString(DSApplication.getInstance().getClass().getName().getBytes("UTF-8"), Base64.DEFAULT);
         //aliasName password
         String aliasKeyPassword = Base64.encodeToString(DSCryptographyHelper.class.getName().getBytes("UTF-8"), Base64.DEFAULT);
         keyStore.setKeyEntry(aliasKeyAliasName, aliasSecretKey, aliasKeyPassword.toCharArray(), null);
         //Store encrypted alias name
         DSSharedPreferencUtils.setPref(DSAuthenticationConstants.AUTHCONSTANTS.SECRETKEY_ALIASNAME,
-                Base64.encodeToString(encryptedAliasName, Base64.DEFAULT));
+                Base64.encodeToString(encryptedAliasName, Base64.DEFAULT), context);
 
         return aliasName;
     }
@@ -234,13 +235,13 @@ public class DSCryptographyHelper {
         KeyStore keyStore = getKeyStore(context);
         //get encrypted alias from preference.
         byte[] encryptedAlias = Base64.decode(DSSharedPreferencUtils.getPref
-                (DSAuthenticationConstants.AUTHCONSTANTS.SECRETKEY_ALIASNAME), Base64.DEFAULT);
+                (DSAuthenticationConstants.AUTHCONSTANTS.SECRETKEY_ALIASNAME, context), Base64.DEFAULT);
 
         char[] dummyPassword = KEYSTORE_PASSWORD.toCharArray();
         char[] secretKeyPassword = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID).toCharArray();
         //Decrypt alias name.
-        String aliasName = decrypt(getAliasNameSecretKey(keyStore), null);
+        String aliasName = decrypt(getAliasNameSecretKey(keyStore), encryptedAlias);
         SecretKey secretKey = (SecretKey) keyStore.getKey(aliasName, secretKeyPassword);
 
         return secretKey;
@@ -253,7 +254,7 @@ public class DSCryptographyHelper {
      */
     private static SecretKey getAliasNameSecretKey(KeyStore keyStore) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, UnrecoverableKeyException {
         //alias name secretKey aliasName.
-        String aliasKeyAliasName = Base64.encodeToString(DSApplication.getApplicationContext().getClass().getName().getBytes("UTF-8"), Base64.DEFAULT);
+        String aliasKeyAliasName = Base64.encodeToString(DSApplication.getInstance().getClass().getName().getBytes("UTF-8"), Base64.DEFAULT);
         //alias name secretKey password.
         String aliasKeyPassword = Base64.encodeToString(DSCryptographyHelper.class.getName().getBytes("UTF-8"), Base64.DEFAULT);
 
@@ -329,11 +330,11 @@ public class DSCryptographyHelper {
     private static class DeleteInstanceId extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            try {
-                InstanceID.getInstance(mContext).deleteInstanceID();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+////                InstanceID.getInstance(mContext).deleteInstanceID();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             return null;
         }
     }

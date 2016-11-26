@@ -1,8 +1,10 @@
 package com.adds.commonHelperClasses;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import com.adds.database.DSDataBaseHelper;
+import com.adds.database.DSDatabaseFieldNames;
 import com.adds.encryption.DSCryptographyHelper;
 import com.adds.modalClasses.DSBankAccModal;
 
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.List;
 
@@ -34,13 +37,31 @@ public class DSModalSelectionHelper {
         DSDataBaseHelper dataBaseHelper = new DSDataBaseHelper(context);
 
         DSBankAccModal bankAccModal = new DSBankAccModal();
-        bankAccModal.setmAccountName(dataList.get(0));
+        bankAccModal.setmAccountName("rol");
         bankAccModal.setmBankName(dataCheckerAndEncrypter(dataList.get(1), context));
         bankAccModal.setmAccNo(dataCheckerAndEncrypter(dataList.get(2), context));
         bankAccModal.setmPassword(dataCheckerAndEncrypter(dataList.get(3), context));
         bankAccModal.setmIfscCode(dataCheckerAndEncrypter(dataList.get(4), context));
-        bankAccModal.setmRemarks(dataCheckerAndEncrypter(dataList.get(5), context));
+        bankAccModal.setmRemarks("sssn");
 
         dataBaseHelper.insertToTableBankAcc(bankAccModal);
+        Cursor cursor = dataBaseHelper.selectBankDetails("rol");
+        if (cursor != null && cursor.getCount() != 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    DSBankAccModal items = new DSBankAccModal();
+                    try {
+                        DSCryptographyHelper.decryptUserDatas(cursor.getString(cursor.getColumnIndex(DSDatabaseFieldNames.BANK_NAME)), context);
+                    } catch (UnrecoverableKeyException e) {
+                        e.printStackTrace();
+                    }
+                } while (cursor.moveToNext());
+            }
+        }
+        cursor.close();
+    }
+
+    public static void getBankDetails() {
+
     }
 }

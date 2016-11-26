@@ -72,12 +72,12 @@ public class DSDataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public Cursor selectAreas() {
+    public Cursor selectBankDetails(String uniqueName) {
         Cursor cursor;
         sqLiteDatabase = this.getReadableDatabase();
         sqLiteDatabase.beginTransaction();
         cursor = sqLiteDatabase.rawQuery("SELECT " + "* " + " FROM " + TABLE_BANK_ACC_DATA + " WHERE "
-                + DSDatabaseFieldNames.ACC_NAME + " = " + " name " + ";", null);
+                + DSDatabaseFieldNames.ACC_NAME + " = '" + uniqueName + "' ;", null);
         sqLiteDatabase.setTransactionSuccessful();
         sqLiteDatabase.endTransaction();
         return cursor;

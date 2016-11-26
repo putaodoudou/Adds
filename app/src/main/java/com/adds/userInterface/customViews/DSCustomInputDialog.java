@@ -14,9 +14,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.adds.R;
+import com.adds.commonHelperClasses.DSModalSelectionHelper;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * @author Rolbin
@@ -24,7 +34,7 @@ import java.util.List;
 public class DSCustomInputDialog extends DialogFragment {
     private ListView mListView;
     private DSInputDialogAdapter mAdapter;
-    private List<String> mDataList;
+    private ArrayList<String> mDataList;
     private int mDialogType;
 
     @Override
@@ -33,8 +43,9 @@ public class DSCustomInputDialog extends DialogFragment {
         dialog.setContentView(R.layout.ds_custom_input_dialog);
         mListView = (ListView) dialog.findViewById(R.id.input_listview);
 
-        mDataList = getArguments().getStringArrayList("");
-        mAdapter = new DSInputDialogAdapter(getActivity(), mDataList, mDialogType);
+        mDataList = getArguments().getStringArrayList("data");
+        mDialogType = mDataList.size();
+        mAdapter = new DSInputDialogAdapter(getActivity(), mDataList);
         mListView.setAdapter(mAdapter);
 
         return dialog;
@@ -46,12 +57,10 @@ public class DSCustomInputDialog extends DialogFragment {
     private class DSInputDialogAdapter extends BaseAdapter {
         private Context mContext;
         private List<String> mFieldsList;
-        private int mType;
 
-        public DSInputDialogAdapter(Context context, List<String> list, int dialogType) {
+        public DSInputDialogAdapter(Context context, List<String> list) {
             this.mContext = context;
             this.mFieldsList = list;
-            this.mType = dialogType;
         }
 
         @Override
@@ -87,7 +96,7 @@ public class DSCustomInputDialog extends DialogFragment {
             holder.fieldName.setText(mFieldsList.get(position));
             holder.inputField.setHint(mFieldsList.get(position));
 
-            if (position == mFieldsList.size()) {
+            if (position == mFieldsList.size() - 1) {
                 holder.confirmButton.setVisibility(View.VISIBLE);
             } else {
                 holder.confirmButton.setVisibility(View.GONE);
@@ -98,36 +107,55 @@ public class DSCustomInputDialog extends DialogFragment {
                 public void onClick(View v) {
                     List<String> dataList = new ArrayList<String>();
                     switch (mDialogType) {
-                        case 6:
-                            passListviewData(6);
+                        case 5:
+                            dataList = getListviewData(5);
+                            try {
+                                DSModalSelectionHelper.encryptBankModalData(dataList, mContext);
+                            } catch (CertificateException e) {
+                                e.printStackTrace();
+                            } catch (NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            } catch (KeyStoreException e) {
+                                e.printStackTrace();
+                            } catch (BadPaddingException e) {
+                                e.printStackTrace();
+                            } catch (IllegalBlockSizeException e) {
+                                e.printStackTrace();
+                            } catch (NoSuchPaddingException e) {
+                                e.printStackTrace();
+                            } catch (InvalidKeyException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         case 1:
-                            passListviewData(6);
+                            dataList = getListviewData(6);
                             break;
                         case 2:
-                            passListviewData(6);
+                            dataList = getListviewData(6);
                             break;
                         case 3:
-                            passListviewData(6);
+                            dataList = getListviewData(6);
                             break;
                         default:
-                            passListviewData(6);
+                            dataList = getListviewData(6);
                             break;
                     }
-
                 }
             });
 
             return convertView;
         }
 
-        private void passListviewData(int number) {
+        private List getListviewData(int number) {
             List<String> dataList = new ArrayList<>();
             for (int count = 0; count < number; count++) {
                 View view = getViewByPosition(count, mListView);
                 ViewHolder holder = (ViewHolder) view.getTag();
                 dataList.add(holder.inputField.getText().toString());
             }
+            return dataList;
         }
 
         private View getViewByPosition(int position, ListView listView) {
