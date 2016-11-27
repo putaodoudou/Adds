@@ -39,9 +39,9 @@ public class DSModalSelectionHelper {
         DSBankAccModal bankAccModal = new DSBankAccModal();
         bankAccModal.setmAccountName("rol");
         bankAccModal.setmBankName(dataCheckerAndEncrypter(dataList.get(1), context));
-        bankAccModal.setmAccNo(dataCheckerAndEncrypter(dataList.get(2), context));
-        bankAccModal.setmPassword(dataCheckerAndEncrypter(dataList.get(3), context));
-        bankAccModal.setmIfscCode(dataCheckerAndEncrypter(dataList.get(4), context));
+        bankAccModal.setmAccNo("sad");
+        bankAccModal.setmPassword("sad");
+        bankAccModal.setmIfscCode("ASdasd");
         bankAccModal.setmRemarks("sssn");
 
         dataBaseHelper.insertToTableBankAcc(bankAccModal);

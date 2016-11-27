@@ -170,11 +170,11 @@ public class DSCryptographyHelper {
                 Settings.Secure.ANDROID_ID).toCharArray();
 
         //Alias name to store the secretKey.
-        String aliasName = getAliasName(keyStore, context);
-        keyStore.setKeyEntry(aliasName, secretKey, secretKeyPassword, null);
+//        String aliasName = getAliasName(keyStore, context);
+        keyStore.setKeyEntry("check", secretKey, secretKeyPassword, null);
 
         //Fill keyStore file with some random keys to confuse hackers
-        setRandomKeys(keyStore);
+//        setRandomKeys(keyStore);
 
         //Save Keystore into a file.
         File keyStoreFile = getKeyStoreFile(context);
@@ -234,15 +234,15 @@ public class DSCryptographyHelper {
             UnrecoverableKeyException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchPaddingException {
         KeyStore keyStore = getKeyStore(context);
         //get encrypted alias from preference.
-        byte[] encryptedAlias = Base64.decode(DSSharedPreferencUtils.getPref
-                (DSAuthenticationConstants.AUTHCONSTANTS.SECRETKEY_ALIASNAME, context), Base64.DEFAULT);
-
-        char[] dummyPassword = KEYSTORE_PASSWORD.toCharArray();
+//        byte[] encryptedAlias = Base64.decode(DSSharedPreferencUtils.getPref
+//                (DSAuthenticationConstants.AUTHCONSTANTS.SECRETKEY_ALIASNAME, context), Base64.DEFAULT);
+//
+//        char[] dummyPassword = KEYSTORE_PASSWORD.toCharArray();
         char[] secretKeyPassword = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID).toCharArray();
-        //Decrypt alias name.
-        String aliasName = decrypt(getAliasNameSecretKey(keyStore), encryptedAlias);
-        SecretKey secretKey = (SecretKey) keyStore.getKey(aliasName, secretKeyPassword);
+//        //Decrypt alias name.
+//        String aliasName = decrypt(getAliasNameSecretKey(keyStore), encryptedAlias);
+        SecretKey secretKey = (SecretKey) keyStore.getKey("check", secretKeyPassword);
 
         return secretKey;
     }
@@ -288,8 +288,8 @@ public class DSCryptographyHelper {
 
         Cipher cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES);
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        String decryptedData = new String(cipher.doFinal(encryptedBytes), "UTF-8");
-        return decryptedData;
+        byte[] decryptedData = cipher.doFinal(encryptedBytes);
+        return new String(decryptedData, "UTF-8");
     }
 
     /**
