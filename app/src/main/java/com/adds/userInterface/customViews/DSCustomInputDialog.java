@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.adds.R;
-import com.adds.commonHelperClasses.DSModalSelectionHelper;
+import com.adds.helpers.DSModalSelectionHelper;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;

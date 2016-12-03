@@ -19,20 +19,20 @@ public class DSLoginPasswordModal {
         return mLoginName;
     }
 
-    public String getmUserName() {
-        return mUserName;
-    }
-
-    public String getmPassword() {
-        return mPassword;
-    }
-
     public void setmLoginName(String mLoginName) {
         this.mLoginName = mLoginName;
     }
 
+    public String getmUserName() {
+        return mUserName;
+    }
+
     public void setmUserName(String mUserName) {
         this.mUserName = mUserName;
+    }
+
+    public String getmPassword() {
+        return mPassword;
     }
 
     public void setmPassword(String mPassword) {

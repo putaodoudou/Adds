@@ -4,9 +4,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/title_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Input Datas"
+        android:textSize="@dimen/_18sdp" />
+
     <ListView
         android:id="@+id/input_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_20sdp"
+        android:divider="@color/colorPrimaryDark"
+        android:dividerHeight="@dimen/_1sdp"
+        android:scrollbars="none"></ListView>
 
 </LinearLayout>

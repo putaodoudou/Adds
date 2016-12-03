@@ -2,6 +2,7 @@ package com.adds.userInterface.applicationUI;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -112,7 +113,11 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
         mExpListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                parent.expandGroup(groupPosition);
+                if (!parent.isGroupExpanded(groupPosition)) {
+                    parent.expandGroup(groupPosition);
+                } else {
+                    parent.collapseGroup(groupPosition);
+                }
                 return true;
             }
         });
@@ -187,6 +192,12 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionsHelper.handleRequestPermissionResult(requestCode, permissions, grantResults);
     }
 
     @Override

@@ -4,18 +4,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <com.adds.userInterface.customViews.DSTextView
         android:id="@+id/text_name"
+        style="@style/horizontal_filler.defultTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:textAllCaps="true"
+        android:textSize="@dimen/_16sdp"
         android:visibility="visible" />
 
     <EditText
         android:id="@+id/input_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@android:color/transparent"
+        android:singleLine="true"
+        android:textSize="@dimen/_15sdp" />
 
     <Button
         android:id="@+id/confirm_btn"
