@@ -10,14 +10,12 @@ import android.preference.PreferenceManager;
  */
 public class DSSharedPreferencUtils {
 
-    private static Context context = DSApplication.getInstance();
-
     public static synchronized String getPref(String id, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(id, "");
     }
 
-    public static synchronized boolean getBooleanPref(String id) {
+    public static synchronized boolean getBooleanPref(String id, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getBoolean(id, false);
     }
@@ -28,18 +26,18 @@ public class DSSharedPreferencUtils {
      * @param id           the id of the item to be retrieved
      * @param defaultValue returns this value if there is no stored value for the corresponding id
      */
-    public static synchronized boolean getBooleanPref(String id, boolean defaultValue) {
+    public static synchronized boolean getBooleanPref(String id, boolean defaultValue, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getBoolean(id, defaultValue);
     }
 
 
-    public static synchronized int getIntPref(String id) {
+    public static synchronized int getIntPref(String id, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getInt(id, 0);
     }
 
-    public static synchronized long getLongPref(String id) {
+    public static synchronized long getLongPref(String id, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getLong(id, 0L);
     }
@@ -51,28 +49,28 @@ public class DSSharedPreferencUtils {
         editor.commit();
     }
 
-    public static synchronized void setBooleanPref(String id, Boolean val) {
+    public static synchronized void setBooleanPref(String id, Boolean val, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(id, val);
         editor.commit();
     }
 
-    public static synchronized void setIntPref(String id, int val) {
+    public static synchronized void setIntPref(String id, int val, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(id, val);
         editor.commit();
     }
 
-    public static synchronized void setLongPref(String id, long val) {
+    public static synchronized void setLongPref(String id, long val, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(id, val);
         editor.commit();
     }
 
-    public static SharedPreferences getPreference() {
+    public static SharedPreferences getPreference(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences;
     }

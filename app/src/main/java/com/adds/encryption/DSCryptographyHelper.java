@@ -52,12 +52,19 @@ public class DSCryptographyHelper {
      * @param context
      */
     public static String encryptUserDatas(String credential, Context context) throws NoSuchAlgorithmException, CertificateException,
-            KeyStoreException, IOException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchPaddingException {
+            KeyStoreException, IOException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchPaddingException, UnrecoverableKeyException {
 
-        //generate key for encryption
-        SecretKey secretKey = generateKey();
-        //save the key in keystore
-        storeKey(context, secretKey);
+        SecretKey secretKey;
+        if (!DSSharedPreferencUtils.getBooleanPref("GET_KEY", context)) {
+            //generate key for encryption
+            secretKey = generateKey();
+            //save the key in keystore
+            storeKey(context, secretKey);
+            //key generated
+            DSSharedPreferencUtils.setBooleanPref("GET_KEY", true, context);
+        } else {
+            secretKey = retrieveKey(context);
+        }
         //encrypting password into byte array
         byte[] encryptedDataBytes = encrypt(secretKey, credential.getBytes("UTF-8"));
 

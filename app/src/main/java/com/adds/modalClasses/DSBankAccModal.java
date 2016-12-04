@@ -18,6 +18,7 @@ public class DSBankAccModal {
         this.mAccNo = mAccNo;
         this.mIfscCode = mIfscCode;
         this.mRemarks = mRemarks;
+
     }
 
     public DSBankAccModal() {

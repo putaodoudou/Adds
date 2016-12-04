@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minWidth="1000dp"
     android:orientation="vertical">
+
 
     <TextView
         android:id="@+id/title_txt"
@@ -17,8 +19,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/_20sdp"
-        android:divider="@color/colorPrimaryDark"
+        android:divider="@color/colorAccent"
         android:dividerHeight="@dimen/_1sdp"
         android:scrollbars="none"></ListView>
+
+    <Button
+        android:id="@+id/confirm_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:background="@color/colorPrimaryDark"
+        android:text="Save data"
+        android:visibility="visible" />
 
 </LinearLayout>

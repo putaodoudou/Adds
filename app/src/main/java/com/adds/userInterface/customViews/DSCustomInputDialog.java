@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class DSCustomInputDialog extends DialogFragment {
     private ListView mListView;
     private DSInputDialogAdapter mAdapter;
     private ArrayList<String> mDataList;
+    private Button confirmButton;
     private int mDialogType;
 
     @Override
@@ -42,6 +44,7 @@ public class DSCustomInputDialog extends DialogFragment {
         Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.ds_custom_input_dialog);
         mListView = (ListView) dialog.findViewById(R.id.input_listview);
+        confirmButton = (Button) dialog.findViewById(R.id.confirm_btn);
 
         mDataList = getArguments().getStringArrayList("data");
         mDialogType = mDataList.size();
@@ -96,13 +99,7 @@ public class DSCustomInputDialog extends DialogFragment {
             holder.fieldName.setText(mFieldsList.get(position));
             holder.inputField.setHint(mFieldsList.get(position));
 
-            if (position == mFieldsList.size() - 1) {
-                holder.confirmButton.setVisibility(View.VISIBLE);
-            } else {
-                holder.confirmButton.setVisibility(View.GONE);
-            }
-
-            holder.confirmButton.setOnClickListener(new View.OnClickListener() {
+            confirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     List<String> dataList = new ArrayList<String>();
@@ -126,6 +123,8 @@ public class DSCustomInputDialog extends DialogFragment {
                             } catch (InvalidKeyException e) {
                                 e.printStackTrace();
                             } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (UnrecoverableKeyException e) {
                                 e.printStackTrace();
                             }
                             break;
@@ -175,7 +174,6 @@ public class DSCustomInputDialog extends DialogFragment {
 
             holder.fieldName = (TextView) view.findViewById(R.id.text_name);
             holder.inputField = (EditText) view.findViewById(R.id.input_field);
-            holder.confirmButton = (Button) view.findViewById(R.id.confirm_btn);
 
             view.setTag(holder);
         }
@@ -183,7 +181,6 @@ public class DSCustomInputDialog extends DialogFragment {
         private class ViewHolder {
             private TextView fieldName;
             private EditText inputField;
-            private Button confirmButton;
         }
 
     }

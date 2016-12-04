@@ -71,7 +71,6 @@ public class DSDataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-
     public Cursor selectBankDetails(String uniqueName) {
         Cursor cursor;
         sqLiteDatabase = this.getReadableDatabase();
@@ -82,16 +81,6 @@ public class DSDataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.endTransaction();
         return cursor;
     }
-
-//    public Cursor selectAreasUnsort() {
-//        Cursor c;
-//        sqLiteDatabase = this.getReadableDatabase();
-//        sqLiteDatabase.beginTransaction();
-//        c = sqLiteDatabase.rawQuery("SELECT " + DSDatabaseFieldNames.TAG_AREA_NAME + " FROM " + TABLE_BANK_ACC_DATA + " ;", null);
-//        sqLiteDatabase.setTransactionSuccessful();
-//        sqLiteDatabase.endTransaction();
-//        return c;
-//    }
 
     public void dropAndRecreateTables() {
         sqLiteDatabase = this.getWritableDatabase();

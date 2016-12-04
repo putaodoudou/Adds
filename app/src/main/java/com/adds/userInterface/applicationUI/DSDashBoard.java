@@ -2,8 +2,8 @@ package com.adds.userInterface.applicationUI;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.view.GravityCompat;
@@ -18,8 +18,10 @@ import android.widget.ExpandableListView;
 
 import com.adds.R;
 import com.adds.adapters.DSExpandableListviewAdapter;
+import com.adds.application.DSSharedPreferencUtils;
 import com.adds.authentication.DSPermissionsHelper;
 import com.adds.authentication.DSPermissionsHelper.PermissionsCallback;
+import com.adds.helpers.DSModalSelectionHelper;
 import com.adds.modalClasses.DSBankAccModal;
 import com.adds.modalClasses.DSCardModal;
 import com.adds.modalClasses.DSChildModal;
@@ -27,6 +29,8 @@ import com.adds.modalClasses.DSHeaderModal;
 import com.adds.modalClasses.DSLoginPasswordModal;
 import com.adds.modalClasses.DSOthersModal;
 import com.adds.userInterface.customViews.DSCustomInputDialog;
+import com.adds.userInterface.customViews.DSFab.FloatingActionButton;
+import com.adds.userInterface.customViews.DSFab.FloatingActionMenu;
 
 import java.util.ArrayList;
 
@@ -35,6 +39,47 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
     private ExpandableListView mExpListView;
     private DSExpandableListviewAdapter mExpandableListAdapter;
     private DSPermissionsHelper mPermissionsHelper;
+
+    private FloatingActionMenu mFabMenus;
+    private FloatingActionButton mAddBankData;
+    private FloatingActionButton mAddCardData;
+    private FloatingActionButton mAddLoginData;
+    private FloatingActionButton mAddOtherData;
+
+    private Handler mUiHandler = new Handler();
+
+    private int mSelectedMenu;
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab1:
+                    mSelectedMenu = 1;
+                    callPopupMethod();
+                    break;
+                case R.id.fab2:
+                    mSelectedMenu = 2;
+                    callPopupMethod();
+                    break;
+                case R.id.fab3:
+                    mSelectedMenu = 3;
+                    callPopupMethod();
+                    break;
+                case R.id.fab4:
+                    mSelectedMenu = 4;
+                    callPopupMethod();
+                    break;
+            }
+        }
+    };
+
+    private void callPopupMethod() {
+        if (checkRuntimePermission()) {
+            showInputDataPopup(mSelectedMenu);
+        } else {
+            mPermissionsHelper.requestPermissionActivity(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,24 +90,17 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
 
         mPermissionsHelper = new DSPermissionsHelper(this, this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mFabMenus = (FloatingActionMenu) findViewById(R.id.fab_menu);
+        mAddBankData = (FloatingActionButton) findViewById(R.id.fab1);
+        mAddCardData = (FloatingActionButton) findViewById(R.id.fab2);
+        mAddLoginData = (FloatingActionButton) findViewById(R.id.fab3);
+        mAddOtherData = (FloatingActionButton) findViewById(R.id.fab4);
 
-                if (mPermissionsHelper.hasPermisson(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    showInputPopup();
-                } else {
-                    mPermissionsHelper.requestPermissionActivity(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                }
+        initDrawerAndNavigation(toolbar);
+        setDashBoardListData();
+    }
 
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
-
-            }
-        });
-
+    private void initDrawerAndNavigation(Toolbar toolbar) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -71,67 +109,105 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        //UI elements
-        mExpListView = (ExpandableListView) findViewById(R.id.expandable_lv);
-
-        ArrayList<DSHeaderModal> headerModal = new ArrayList<>();
-        DSHeaderModal modal1 = new DSHeaderModal();
-        DSHeaderModal modal2 = new DSHeaderModal();
-        DSHeaderModal modal3 = new DSHeaderModal();
-        DSHeaderModal modal4 = new DSHeaderModal();
-        headerModal.add(modal1);
-        headerModal.add(modal2);
-        headerModal.add(modal3);
-        headerModal.add(modal4);
-        modal1.setmHeader("one");
-        modal2.setmHeader("two");
-        modal3.setmHeader("three");
-        modal4.setmHeader("four");
-
-        DSBankAccModal bankAccModal = new DSBankAccModal("dasd", "Asdasd", "asddas", "asdsad", "asdasd");
-        ArrayList<DSBankAccModal> list1 = new ArrayList<>();
-        list1.add(bankAccModal);
-
-        DSCardModal cardModal = new DSCardModal("dqwwwwasd", 12, 11, 121);
-        ArrayList<DSCardModal> list2 = new ArrayList<>();
-        list2.add(cardModal);
-
-        DSLoginPasswordModal loginModal = new DSLoginPasswordModal("asdqwerr", "bnmk", "lol");
-        ArrayList<DSLoginPasswordModal> list3 = new ArrayList<>();
-        list3.add(loginModal);
-
-        DSOthersModal othersModal = new DSOthersModal("wowww", "qwwww");
-        ArrayList<DSOthersModal> list4 = new ArrayList<>();
-        list4.add(othersModal);
-
-        DSChildModal childModal = new DSChildModal(list1, list2, list3, list4);
-
-        mExpandableListAdapter = new DSExpandableListviewAdapter(this, headerModal, childModal);
-        mExpListView.setAdapter(mExpandableListAdapter);
-
-        mExpListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                if (!parent.isGroupExpanded(groupPosition)) {
-                    parent.expandGroup(groupPosition);
-                } else {
-                    parent.collapseGroup(groupPosition);
-                }
-                return true;
-            }
-        });
     }
 
-    private void showInputPopup() {
+    private void setDashBoardListData() {
+        if (DSSharedPreferencUtils.getBooleanPref("SAVED_DATA", this)) {
+            //UI elements
+            mExpListView = (ExpandableListView) findViewById(R.id.expandable_lv);
+
+            ArrayList<DSHeaderModal> headerModal = new ArrayList<>();
+            DSHeaderModal modal1 = new DSHeaderModal();
+            DSHeaderModal modal2 = new DSHeaderModal();
+            DSHeaderModal modal3 = new DSHeaderModal();
+            DSHeaderModal modal4 = new DSHeaderModal();
+            headerModal.add(modal1);
+            headerModal.add(modal2);
+            headerModal.add(modal3);
+            headerModal.add(modal4);
+            modal1.setmHeader("one");
+            modal2.setmHeader("two");
+            modal3.setmHeader("three");
+            modal4.setmHeader("four");
+
+            DSBankAccModal bankAccModal = new DSBankAccModal("dasd", "Asdasd", "asddas", "asdsad", "asdasd");
+            ArrayList<DSBankAccModal> list1 = new ArrayList<>();
+            list1.add(bankAccModal);
+
+            DSCardModal cardModal = new DSCardModal("dqwwwwasd", 12, 11, 121);
+            ArrayList<DSCardModal> list2 = new ArrayList<>();
+            list2.add(cardModal);
+
+            DSLoginPasswordModal loginModal = new DSLoginPasswordModal("asdqwerr", "bnmk", "lol");
+            ArrayList<DSLoginPasswordModal> list3 = new ArrayList<>();
+            list3.add(loginModal);
+
+            DSOthersModal othersModal = new DSOthersModal("wowww", "qwwww");
+            ArrayList<DSOthersModal> list4 = new ArrayList<>();
+            list4.add(othersModal);
+
+            DSChildModal childModal = new DSChildModal(list1, list2, list3, list4);
+
+            mExpandableListAdapter = new DSExpandableListviewAdapter(this, headerModal, childModal);
+            mExpListView.setAdapter(mExpandableListAdapter);
+
+            mExpListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                @Override
+                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                    if (!parent.isGroupExpanded(groupPosition)) {
+                        parent.expandGroup(groupPosition);
+                    } else {
+                        parent.collapseGroup(groupPosition);
+                    }
+                    return true;
+                }
+            });
+
+            mExpListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                    return false;
+                }
+            });
+
+        } else {
+            //todo show fallback message
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initFab();
+
+    }
+
+    private void initFab() {
+        mAddBankData.setOnClickListener(clickListener);
+        mAddCardData.setOnClickListener(clickListener);
+        mAddLoginData.setOnClickListener(clickListener);
+        mAddOtherData.setOnClickListener(clickListener);
+
+        int delay = 400;
+        mUiHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFabMenus.showMenuButton(true);
+            }
+        }, delay);
+    }
+
+    private boolean checkRuntimePermission() {
+        if (mPermissionsHelper.hasPermisson(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            return true;
+        }
+        return false;
+    }
+
+    private void showInputDataPopup(int modal) {
         DSCustomInputDialog inputDialog = new DSCustomInputDialog();
         Bundle bundle = new Bundle();
-        ArrayList<String> list = new ArrayList<>();
-        list.add("sadsd");
-        list.add("sadsd");
-        list.add("sadsd");
-        list.add("sadsd");
-        list.add("sadsd");
+        ArrayList<String> list = DSModalSelectionHelper.getInputModalData(modal);
         bundle.putStringArrayList("data", list);
         inputDialog.setArguments(bundle);
         inputDialog.show(getFragmentManager(), "dialog");
@@ -202,11 +278,12 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
 
     @Override
     public void permissionGranted(String[] permissions) {
-        showInputPopup();
+        showInputDataPopup(mSelectedMenu);
     }
 
     @Override
     public void permissionDenied(String[] permissions) {
 
     }
+
 }
