@@ -1,10 +1,12 @@
 package com.adds.modalClasses;
 
+import java.io.Serializable;
+
 /**
  * Created by 10745 on 11/10/2016.
  */
 
-public class DSBankAccModal {
+public class DSBankAccModal implements Serializable {
     private String mAccountName;
     private String mBankName;
     private String mPassword;

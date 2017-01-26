@@ -1,20 +1,25 @@
 package com.adds.modalClasses;
 
+import java.io.Serializable;
+
 /**
  * Created by 10745 on 11/10/2016.
  */
 
-public class DSCardModal {
+public class DSCardModal implements Serializable {
     private String mCardName;
-    private int mCardNo;
-    private int mCardPin;
-    private int mCvvCode;
+    private String mCardNo;
+    private String mCardPin;
+    private String mCvvCode;
 
-    public DSCardModal(String mCardName, int mCardNo, int mCardPin, int mCvvCode) {
+    public DSCardModal(String mCardName, String mCardNo, String mCardPin, String mCvvCode) {
         this.mCardName = mCardName;
         this.mCardNo = mCardNo;
         this.mCardPin = mCardPin;
         this.mCvvCode = mCvvCode;
+    }
+
+    public DSCardModal() {
     }
 
     public String getmCardName() {
@@ -25,27 +30,27 @@ public class DSCardModal {
         this.mCardName = mCardName;
     }
 
-    public int getmCardNo() {
+    public String getmCardNo() {
         return mCardNo;
     }
 
-    public void setmCardNo(int mCardNo) {
+    public void setmCardNo(String mCardNo) {
         this.mCardNo = mCardNo;
     }
 
-    public int getmCardPin() {
+    public String getmCardPin() {
         return mCardPin;
     }
 
-    public void setmCardPin(int mCardPin) {
+    public void setmCardPin(String mCardPin) {
         this.mCardPin = mCardPin;
     }
 
-    public int getmCvvCode() {
+    public String getmCvvCode() {
         return mCvvCode;
     }
 
-    public void setmCvvCode(int mCvvCode) {
+    public void setmCvvCode(String mCvvCode) {
         this.mCvvCode = mCvvCode;
     }
 }

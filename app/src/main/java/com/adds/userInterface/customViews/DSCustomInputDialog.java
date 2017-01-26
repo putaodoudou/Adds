@@ -47,7 +47,7 @@ public class DSCustomInputDialog extends DialogFragment {
         confirmButton = (Button) dialog.findViewById(R.id.confirm_btn);
 
         mDataList = getArguments().getStringArrayList("data");
-        mDialogType = mDataList.size();
+        mDialogType = getArguments().getInt("type");
         mAdapter = new DSInputDialogAdapter(getActivity(), mDataList);
         mListView.setAdapter(mAdapter);
 
@@ -102,50 +102,48 @@ public class DSCustomInputDialog extends DialogFragment {
             confirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    List<String> dataList = new ArrayList<String>();
+                    List<String> dataList = getListviewData(mDataList.size());
                     switch (mDialogType) {
-                        case 5:
-                            dataList = getListviewData(5);
+                        case 1:
                             try {
                                 DSModalSelectionHelper.encryptBankModalData(dataList, mContext);
-                            } catch (CertificateException e) {
-                                e.printStackTrace();
-                            } catch (NoSuchAlgorithmException e) {
-                                e.printStackTrace();
-                            } catch (KeyStoreException e) {
-                                e.printStackTrace();
-                            } catch (BadPaddingException e) {
-                                e.printStackTrace();
-                            } catch (IllegalBlockSizeException e) {
-                                e.printStackTrace();
-                            } catch (NoSuchPaddingException e) {
-                                e.printStackTrace();
-                            } catch (InvalidKeyException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (UnrecoverableKeyException e) {
+                            } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
+                                    | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
                                 e.printStackTrace();
                             }
                             break;
-                        case 1:
-                            dataList = getListviewData(6);
-                            break;
                         case 2:
-                            dataList = getListviewData(6);
+                            try {
+                                DSModalSelectionHelper.encryptCardData(dataList, mContext);
+                            } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
+                                    | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         case 3:
-                            dataList = getListviewData(6);
+                            try {
+                                DSModalSelectionHelper.encryptLoginData(dataList, mContext);
+                            } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
+                                    | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        case 4:
+                            try {
+                                DSModalSelectionHelper.encryptOtherData(dataList, mContext);
+                            } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
+                                    | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         default:
-                            dataList = getListviewData(6);
                             break;
                     }
                 }
             });
-
             return convertView;
         }
+
 
         private List getListviewData(int number) {
             List<String> dataList = new ArrayList<>();

@@ -9,12 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.adds.R;
-import com.adds.modalClasses.DSBankAccModal;
-import com.adds.modalClasses.DSCardModal;
-import com.adds.modalClasses.DSChildModal;
-import com.adds.modalClasses.DSHeaderModal;
-import com.adds.modalClasses.DSLoginPasswordModal;
-import com.adds.modalClasses.DSOthersModal;
+import com.adds.modalClasses.DSDisplayDataModal;
+import com.adds.userInterface.applicationUI.DSDashBoard;
 import com.adds.userInterface.customViews.DSRoundedLetterView;
 
 import java.util.ArrayList;
@@ -25,10 +21,10 @@ import java.util.Random;
  */
 public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
     private Context mContext;
-    private DSChildModal mChildModal;
-    private ArrayList<DSHeaderModal> mHeaderModal;
+    private ArrayList<ArrayList<String>> mChildModal;
+    private ArrayList<DSDisplayDataModal> mHeaderModal;
 
-    public DSExpandableListviewAdapter(Context context, ArrayList<DSHeaderModal> parent, DSChildModal child) {
+    public DSExpandableListviewAdapter(Context context, ArrayList<DSDisplayDataModal> parent, ArrayList<ArrayList<String>> child) {
         this.mContext = context;
         this.mHeaderModal = parent;
         this.mChildModal = child;
@@ -51,57 +47,20 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        int size = 0;
-        switch (groupPosition) {
-            case 0:
-                size = mChildModal.getmBankAccModal().size();
-                break;
-            case 1:
-                size = mChildModal.getmCardModal().size();
-                break;
-            case 2:
-                size = mChildModal.getmLoginPasswordModal().size();
-                break;
-            case 3:
-                size = mChildModal.getmOthersModal().size();
-                break;
-            default:
-                size = 0;
-                break;
+        if (mChildModal.get(groupPosition) != null) {
+            return mChildModal.get(groupPosition).size();
         }
-        return size;
+        return 0;
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        switch (groupPosition) {
-            case 0:
-                return mChildModal.getmBankAccModal();
-            case 1:
-                return mChildModal.getmCardModal();
-            case 2:
-                return mChildModal.getmLoginPasswordModal();
-            case 3:
-                return mChildModal.getmOthersModal();
-            default:
-                return null;
-        }
+        return mChildModal.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        switch (groupPosition) {
-            case 0:
-                return mChildModal.getmBankAccModal().get(childPosition);
-            case 1:
-                return mChildModal.getmCardModal().get(childPosition);
-            case 2:
-                return mChildModal.getmLoginPasswordModal().get(childPosition);
-            case 3:
-                return mChildModal.getmOthersModal().get(childPosition);
-            default:
-                return null;
-        }
+        return mChildModal.get(groupPosition).get(childPosition);
     }
 
     @Override
@@ -134,15 +93,14 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
         }
         holder = (ViewHolder) convertView.getTag();
 
-        DSHeaderModal data = mHeaderModal.get(groupPosition);
-        holder.groupName.setText(data.getmHeader());
-
+        DSDisplayDataModal data = mHeaderModal.get(groupPosition);
+        holder.groupName.setText(data.getData());
 
         return convertView;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final ViewHolder holder;
 
         if (convertView == null) {
@@ -150,41 +108,15 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
             initializeChildView(convertView);
         }
         holder = (ViewHolder) convertView.getTag();
-        switch (groupPosition) {
-            case 0:
-                DSBankAccModal bankdata = mChildModal.getmBankAccModal().get(childPosition);
-                holder.letterView.setBackgroundColor(getRandomColor());
-                holder.childName.setText(bankdata.getmAccountName());
-                holder.dataOne.setText(bankdata.getmBankName());
-                holder.dataTwo.setText(bankdata.getmPassword());
-                holder.dataThree.setText(bankdata.getmAccNo());
-                holder.dataFour.setText(bankdata.getmIfscCode());
-                holder.dataFive.setText(bankdata.getmRemarks());
-                break;
-            case 1:
-                holder.letterView.setBackgroundColor(getRandomColor());
-                DSCardModal cardData = mChildModal.getmCardModal().get(childPosition);
-                holder.childName.setText(cardData.getmCardName());
-                holder.dataOne.setText(String.valueOf(cardData.getmCardNo()));
-                holder.dataTwo.setText(String.valueOf(cardData.getmCardPin()));
-                holder.dataThree.setText(String.valueOf(cardData.getmCvvCode()));
-                break;
-            case 2:
-                holder.letterView.setBackgroundColor(getRandomColor());
-                DSLoginPasswordModal loginData = mChildModal.getmLoginPasswordModal().get(childPosition);
-                holder.childName.setText(loginData.getmLoginName());
-                holder.dataOne.setText(loginData.getmUserName());
-                holder.dataTwo.setText(loginData.getmPassword());
-                break;
-            case 3:
-                holder.letterView.setBackgroundColor(getRandomColor());
-                DSOthersModal otherData = mChildModal.getmOthersModal().get(childPosition);
-                holder.childName.setText(otherData.getmName());
-                holder.dataOne.setText(otherData.getmData());
-                break;
-            default:
-                break;
-        }
+        holder.letterView.setBackgroundColor(getRandomColor());
+        holder.childName.setText(mChildModal.get(groupPosition).get(childPosition));
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uniqueName = mChildModal.get(groupPosition).get(childPosition);
+                ((DSDashBoard) mContext).onChildClick(uniqueName, groupPosition + 1);
+            }
+        });
 
         return convertView;
     }
@@ -200,13 +132,7 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
     private void initializeChildView(View view) {
         ViewHolder holder = new ViewHolder();
         holder.childName = (TextView) view.findViewById(R.id.name);
-        holder.dataOne = (TextView) view.findViewById(R.id.data_one);
-        holder.dataTwo = (TextView) view.findViewById(R.id.data_two);
-        holder.dataThree = (TextView) view.findViewById(R.id.data_three);
-        holder.dataFour = (TextView) view.findViewById(R.id.data_four);
-        holder.dataFive = (TextView) view.findViewById(R.id.data_five);
         holder.letterView = (DSRoundedLetterView) view.findViewById(R.id.rlv_name_view);
-
         view.setTag(holder);
     }
 
@@ -218,11 +144,6 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
 
     private class ViewHolder {
         TextView childName;
-        TextView dataOne;
-        TextView dataTwo;
-        TextView dataThree;
-        TextView dataFour;
-        TextView dataFive;
         TextView groupName;
         ImageView groupIcon;
         DSRoundedLetterView letterView;

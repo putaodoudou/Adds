@@ -21,35 +21,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible" />
-
-    <TextView
-        android:id="@+id/data_one"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible" />
-
-    <TextView
-        android:id="@+id/data_two"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible" />
-
-    <TextView
-        android:id="@+id/data_three"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible" />
-
-    <TextView
-        android:id="@+id/data_four"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible" />
-
-    <TextView
-        android:id="@+id/data_five"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible" />
-
 </LinearLayout>

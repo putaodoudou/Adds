@@ -1,10 +1,12 @@
 package com.adds.modalClasses;
 
+import java.io.Serializable;
+
 /**
  * Created by 10745 on 11/10/2016.
  */
 
-public class DSLoginPasswordModal {
+public class DSLoginPasswordModal implements Serializable {
     private String mLoginName;
     private String mUserName;
     private String mPassword;
@@ -13,6 +15,10 @@ public class DSLoginPasswordModal {
         this.mLoginName = mLoginName;
         this.mUserName = mUserName;
         this.mPassword = mPassword;
+    }
+
+    public DSLoginPasswordModal() {
+
     }
 
     public String getmLoginName() {

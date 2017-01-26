@@ -5,13 +5,19 @@
     android:id="@+id/content_dsdash_board"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.adds.userInterface.applicationUI.DSDashBoard"
     tools:showIn="@layout/app_bar_dsdash_board">
+
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"></FrameLayout>
 
     <ExpandableListView
         android:id="@+id/expandable_lv"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
-
 </LinearLayout>

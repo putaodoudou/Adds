@@ -1,6 +1,7 @@
 package com.adds.userInterface.applicationUI;
 
 import android.Manifest;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -15,26 +16,38 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 
+import com.adds.Listeners.ExpandableListChildClickListener;
 import com.adds.R;
 import com.adds.adapters.DSExpandableListviewAdapter;
-import com.adds.application.DSSharedPreferencUtils;
 import com.adds.authentication.DSPermissionsHelper;
 import com.adds.authentication.DSPermissionsHelper.PermissionsCallback;
+import com.adds.database.DSDataBaseHelper;
+import com.adds.database.DSDatabaseFieldNames;
 import com.adds.helpers.DSModalSelectionHelper;
 import com.adds.modalClasses.DSBankAccModal;
 import com.adds.modalClasses.DSCardModal;
-import com.adds.modalClasses.DSChildModal;
-import com.adds.modalClasses.DSHeaderModal;
+import com.adds.modalClasses.DSDisplayDataModal;
 import com.adds.modalClasses.DSLoginPasswordModal;
 import com.adds.modalClasses.DSOthersModal;
 import com.adds.userInterface.customViews.DSCustomInputDialog;
 import com.adds.userInterface.customViews.DSFab.FloatingActionButton;
 import com.adds.userInterface.customViews.DSFab.FloatingActionMenu;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 
-public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSelectedListener, PermissionsCallback {
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSelectedListener, PermissionsCallback, ExpandableListChildClickListener {
 
     private ExpandableListView mExpListView;
     private DSExpandableListviewAdapter mExpandableListAdapter;
@@ -112,67 +125,92 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
     }
 
     private void setDashBoardListData() {
-        if (DSSharedPreferencUtils.getBooleanPref("SAVED_DATA", this)) {
-            //UI elements
-            mExpListView = (ExpandableListView) findViewById(R.id.expandable_lv);
+//        if (DSSharedPreferencUtils.getBooleanPref("SAVED_DATA", this)) {
+        //UI elements
+        mExpListView = (ExpandableListView) findViewById(R.id.expandable_lv);
 
-            ArrayList<DSHeaderModal> headerModal = new ArrayList<>();
-            DSHeaderModal modal1 = new DSHeaderModal();
-            DSHeaderModal modal2 = new DSHeaderModal();
-            DSHeaderModal modal3 = new DSHeaderModal();
-            DSHeaderModal modal4 = new DSHeaderModal();
-            headerModal.add(modal1);
-            headerModal.add(modal2);
-            headerModal.add(modal3);
-            headerModal.add(modal4);
-            modal1.setmHeader("one");
-            modal2.setmHeader("two");
-            modal3.setmHeader("three");
-            modal4.setmHeader("four");
+        ArrayList<DSDisplayDataModal> headerModal = new ArrayList<>();
+        DSDisplayDataModal modal1 = new DSDisplayDataModal();
+        DSDisplayDataModal modal2 = new DSDisplayDataModal();
+        DSDisplayDataModal modal3 = new DSDisplayDataModal();
+        DSDisplayDataModal modal4 = new DSDisplayDataModal();
+        headerModal.add(modal1);
+        headerModal.add(modal2);
+        headerModal.add(modal3);
+        headerModal.add(modal4);
+        modal1.setDisplayData("Bank account details");
+        modal2.setDisplayData("Credit and Debit card details ");
+        modal3.setDisplayData("Login credential details");
+        modal4.setDisplayData("Other secure datas");
 
-            DSBankAccModal bankAccModal = new DSBankAccModal("dasd", "Asdasd", "asddas", "asdsad", "asdasd");
-            ArrayList<DSBankAccModal> list1 = new ArrayList<>();
-            list1.add(bankAccModal);
-
-            DSCardModal cardModal = new DSCardModal("dqwwwwasd", 12, 11, 121);
-            ArrayList<DSCardModal> list2 = new ArrayList<>();
-            list2.add(cardModal);
-
-            DSLoginPasswordModal loginModal = new DSLoginPasswordModal("asdqwerr", "bnmk", "lol");
-            ArrayList<DSLoginPasswordModal> list3 = new ArrayList<>();
-            list3.add(loginModal);
-
-            DSOthersModal othersModal = new DSOthersModal("wowww", "qwwww");
-            ArrayList<DSOthersModal> list4 = new ArrayList<>();
-            list4.add(othersModal);
-
-            DSChildModal childModal = new DSChildModal(list1, list2, list3, list4);
-
-            mExpandableListAdapter = new DSExpandableListviewAdapter(this, headerModal, childModal);
-            mExpListView.setAdapter(mExpandableListAdapter);
-
-            mExpListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                @Override
-                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                    if (!parent.isGroupExpanded(groupPosition)) {
-                        parent.expandGroup(groupPosition);
-                    } else {
-                        parent.collapseGroup(groupPosition);
-                    }
-                    return true;
-                }
-            });
-
-            mExpListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-                @Override
-                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                    return false;
-                }
-            });
-
-        } else {
-            //todo show fallback message
+        ArrayList<ArrayList<String>> childModal = new ArrayList<>();
+        DSDataBaseHelper dataBaseHelper = new DSDataBaseHelper(this);
+        Cursor cursor = dataBaseHelper.selectAllBankName();
+        ArrayList<String> dataModals1 = new ArrayList<>();
+        if (cursor != null && cursor.getCount() != 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    dataModals1.add(cursor.getString(cursor.getColumnIndex(DSDatabaseFieldNames.ACC_NAME)));
+                } while (cursor.moveToNext());
+            }
         }
+        cursor.close();
+        childModal.add(dataModals1);
+
+        Cursor cursor2 = dataBaseHelper.selectAllCardName();
+        ArrayList<String> dataModals2 = new ArrayList<>();
+        if (cursor2 != null && cursor2.getCount() != 0) {
+            if (cursor2.moveToFirst()) {
+                do {
+                    dataModals2.add(cursor2.getString(cursor2.getColumnIndex(DSDatabaseFieldNames.CARD_NAME)));
+                } while (cursor2.moveToNext());
+            }
+        }
+        cursor2.close();
+        childModal.add(dataModals2);
+
+        Cursor cursor3 = dataBaseHelper.selectAllLoginName();
+        ArrayList<String> dataModals3 = new ArrayList<>();
+        if (cursor3 != null && cursor3.getCount() != 0) {
+            if (cursor3.moveToFirst()) {
+                do {
+                    dataModals3.add(cursor3.getString(cursor3.getColumnIndex(DSDatabaseFieldNames.LOGIN_NAME)));
+                } while (cursor3.moveToNext());
+            }
+        }
+        cursor3.close();
+        childModal.add(dataModals3);
+
+        Cursor cursor4 = dataBaseHelper.selectAllOtherName();
+        ArrayList<String> dataModals4 = new ArrayList<>();
+        if (cursor4 != null && cursor4.getCount() != 0) {
+            if (cursor4.moveToFirst()) {
+                do {
+                    dataModals4.add(cursor4.getString(cursor4.getColumnIndex(DSDatabaseFieldNames.OTHER_DATA_NAME)));
+                } while (cursor4.moveToNext());
+            }
+        }
+        cursor4.close();
+        childModal.add(dataModals4);
+
+        mExpandableListAdapter = new DSExpandableListviewAdapter(this, headerModal, childModal);
+        mExpListView.setAdapter(mExpandableListAdapter);
+
+        mExpListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                if (!parent.isGroupExpanded(groupPosition)) {
+                    parent.expandGroup(groupPosition);
+                } else {
+                    parent.collapseGroup(groupPosition);
+                }
+                return true;
+            }
+        });
+
+//        } else {
+//            todo show fallback message
+//        }
     }
 
     @Override
@@ -209,6 +247,7 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
         Bundle bundle = new Bundle();
         ArrayList<String> list = DSModalSelectionHelper.getInputModalData(modal);
         bundle.putStringArrayList("data", list);
+        bundle.putInt("type", modal);
         inputDialog.setArguments(bundle);
         inputDialog.show(getFragmentManager(), "dialog");
     }
@@ -286,4 +325,52 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
 
     }
 
+    @Override
+    public void onChildClick(String uniqueName, int groupPos) {
+        ArrayList<String> labels = DSModalSelectionHelper.getInputModalData(groupPos);
+        Bundle bundle = new Bundle();
+        if (groupPos == 1) {
+            try {
+                DSBankAccModal modal = DSModalSelectionHelper.getDecryptedBankDetails(uniqueName, DSDashBoard.this);
+                bundle.putSerializable("modal", modal);
+            } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
+                    | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
+                e.printStackTrace();
+            }
+        } else if (groupPos == 2) {
+            try {
+                DSCardModal modal = DSModalSelectionHelper.getDecryptedCardDetails(uniqueName, DSDashBoard.this);
+                bundle.putSerializable("modal", modal);
+            } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
+                    | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
+                e.printStackTrace();
+            }
+
+        } else if (groupPos == 3) {
+            try {
+                DSLoginPasswordModal modal = DSModalSelectionHelper.getDecryptedLoginDetails(uniqueName, DSDashBoard.this);
+                bundle.putSerializable("modal", modal);
+            } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
+                    | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
+                e.printStackTrace();
+            }
+        } else if (groupPos == 4) {
+            try {
+                DSOthersModal modal = DSModalSelectionHelper.getDecryptedOtherDetails(uniqueName, DSDashBoard.this);
+                bundle.putSerializable("modal", modal);
+            } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
+                    | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
+                e.printStackTrace();
+            }
+        }
+
+        bundle.putSerializable("labels", labels);
+        bundle.putInt("type", groupPos);
+        DSDecryptedDataViewerFragment fragment = new DSDecryptedDataViewerFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, null).commit();
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        mExpListView.setVisibility(View.GONE);
+        frameLayout.setVisibility(View.VISIBLE);
+    }
 }
