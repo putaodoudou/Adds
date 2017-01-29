@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -139,9 +140,13 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
         headerModal.add(modal3);
         headerModal.add(modal4);
         modal1.setDisplayData("Bank account details");
+        modal1.setDrawable(ContextCompat.getDrawable(this, R.drawable.ic_account_balance_black_48dp));
         modal2.setDisplayData("Credit and Debit card details ");
+        modal2.setDrawable(ContextCompat.getDrawable(this, R.drawable.ic_credit_card_black_48dp));
         modal3.setDisplayData("Login credential details");
+        modal3.setDrawable(ContextCompat.getDrawable(this, R.drawable.ic_account_circle_black_48dp));
         modal4.setDisplayData("Other secure datas");
+        modal4.setDrawable(ContextCompat.getDrawable(this, R.drawable.ic_event_note_black_48dp));
 
         ArrayList<ArrayList<String>> childModal = new ArrayList<>();
         DSDataBaseHelper dataBaseHelper = new DSDataBaseHelper(this);

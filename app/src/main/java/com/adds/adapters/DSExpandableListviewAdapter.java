@@ -95,6 +95,7 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
 
         DSDisplayDataModal data = mHeaderModal.get(groupPosition);
         holder.groupName.setText(data.getData());
+        holder.groupIcon.setImageDrawable(data.getDrawable());
 
         return convertView;
     }
