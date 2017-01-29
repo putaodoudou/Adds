@@ -19,5 +19,7 @@
     <ExpandableListView
         android:id="@+id/expandable_lv"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:divider="@null"
+        android:groupIndicator="@null" />
 </LinearLayout>

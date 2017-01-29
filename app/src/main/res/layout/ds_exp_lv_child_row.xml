@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <com.adds.userInterface.customViews.DSRoundedLetterView
         android:id="@+id/rlv_name_view"
@@ -11,6 +11,7 @@
         android:layout_height="56dp"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
+        android:padding="@dimen/_10sdp"
         app:rlv_backgroundColorValue="@color/colorAccent"
         app:rlv_titleColor="@android:color/white"
         app:rlv_titleSize="35dp"
@@ -18,7 +19,10 @@
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:textSize="@dimen/_14sdp"
         android:visibility="visible" />
 </LinearLayout>

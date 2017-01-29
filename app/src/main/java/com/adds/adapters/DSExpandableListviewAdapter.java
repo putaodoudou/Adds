@@ -109,7 +109,8 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
             initializeChildView(convertView);
         }
         holder = (ViewHolder) convertView.getTag();
-        holder.letterView.setBackgroundColor(getRandomColor());
+        holder.childIcon.setBackgroundColor(getRandomColor());
+        holder.childIcon.setTitleText(mChildModal.get(groupPosition).get(childPosition).substring(0, 1).toUpperCase());
         holder.childName.setText(mChildModal.get(groupPosition).get(childPosition));
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +134,7 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
     private void initializeChildView(View view) {
         ViewHolder holder = new ViewHolder();
         holder.childName = (TextView) view.findViewById(R.id.name);
-        holder.letterView = (DSRoundedLetterView) view.findViewById(R.id.rlv_name_view);
+        holder.childIcon = (DSRoundedLetterView) view.findViewById(R.id.rlv_name_view);
         view.setTag(holder);
     }
 
@@ -147,7 +148,7 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
         TextView childName;
         TextView groupName;
         ImageView groupIcon;
-        DSRoundedLetterView letterView;
+        DSRoundedLetterView childIcon;
     }
 
 }
