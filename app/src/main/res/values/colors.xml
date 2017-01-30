@@ -25,7 +25,6 @@
     <color name="material_red_light">#D32F2F</color>
 
 
-
     <array name="rounded_letter_colors">
         <item>@color/bright_pink</item>
         <item>@color/red</item>
@@ -40,4 +39,6 @@
         <item>@color/violet</item>
         <item>@color/magenta</item>
     </array>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

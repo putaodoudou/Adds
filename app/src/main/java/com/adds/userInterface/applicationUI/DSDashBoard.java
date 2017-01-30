@@ -1,6 +1,7 @@
 package com.adds.userInterface.applicationUI;
 
 import android.Manifest;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -298,6 +299,13 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
+            Intent intent = new Intent(this, DSSecureLockScreen.class);
+            startActivity(intent);
+//            DSSecureLockScreen lockScreenFragment = new DSSecureLockScreen();
+//            getSupportFragmentManager().beginTransaction().add(R.id.content_frame, lockScreenFragment, null).commit();
+//            FrameLayout frameLayout = (FrameLayout) findViewById(R.id.content_frame);
+//            mExpListView.setVisibility(View.GONE);
+//            frameLayout.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.nav_slideshow) {
 

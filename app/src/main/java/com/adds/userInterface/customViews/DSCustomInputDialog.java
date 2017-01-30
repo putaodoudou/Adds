@@ -38,6 +38,7 @@ public class DSCustomInputDialog extends DialogFragment {
     private ArrayList<String> mDataList;
     private Button confirmButton;
     private int mDialogType;
+    private boolean isAllFieldsAreFilled = true;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -103,6 +104,11 @@ public class DSCustomInputDialog extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     List<String> dataList = getListviewData(mDataList.size());
+                    if (!isAllFieldsAreFilled) {
+                        //ShowPopup
+                        dismiss();
+                        return;
+                    }
                     switch (mDialogType) {
                         case 1:
                             try {
@@ -150,7 +156,11 @@ public class DSCustomInputDialog extends DialogFragment {
             for (int count = 0; count < number; count++) {
                 View view = getViewByPosition(count, mListView);
                 ViewHolder holder = (ViewHolder) view.getTag();
-                dataList.add(holder.inputField.getText().toString());
+                String fieldData = holder.inputField.getText().toString();
+                dataList.add(fieldData);
+                if (fieldData == null || fieldData.isEmpty()) {
+                    isAllFieldsAreFilled = false;
+                }
             }
             return dataList;
         }
