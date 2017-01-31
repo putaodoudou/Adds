@@ -97,6 +97,11 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard_activity);

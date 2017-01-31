@@ -16,6 +16,7 @@ import java.util.Map;
 public class DSApplication extends Application {
     public static final int FONT_BOLD = 0;
     public static final int FONT_REGULAR = 1;
+    public static boolean isLocked = true;
     private static DSApplication INSTANCE;
     private static Map<String, Typeface> sTypefaces = new HashMap<>();
     private static String[] sFontNames;
