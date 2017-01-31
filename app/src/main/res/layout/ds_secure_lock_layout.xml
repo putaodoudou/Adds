@@ -283,6 +283,6 @@
         android:ems="10"
 
         android:gravity="center"
-        android:inputType="numberPassword"
+        android:inputType="textPassword"
         android:textSize="@dimen/_25sdp" />
 </RelativeLayout>

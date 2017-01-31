@@ -23,7 +23,7 @@ public class DSSecureLockScreen extends Activity implements OnClickListener {
 
     private static final int PIN_LENGTH = 4;
     private String mUserTypedPassword;
-    private String mUserPassword;
+    private String mUserPassword = "android";
 
     private TextView mStatusText;
 
@@ -41,6 +41,8 @@ public class DSSecureLockScreen extends Activity implements OnClickListener {
     private Button mKeypadDelBtn;
     private EditText mPasswordInputField;
     private ImageView mBackspace;
+
+    private Handler mHandler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,9 +97,16 @@ public class DSSecureLockScreen extends Activity implements OnClickListener {
             startActivity(exitIntent);
             finish();
         } else if (view.getId() == R.id.buttonDeleteBack) {
-            if (mUserTypedPassword != null) {
-                mUserTypedPassword = mUserTypedPassword.substring(0, mUserTypedPassword.length() - 1);
-                mPasswordInputField.setText("");
+            if (mUserTypedPassword.equals(mUserPassword)) {
+                mStatusText.setTextColor(Color.GREEN);
+                mStatusText.setText("Correct");
+                DSApplication.getInstance().isLocked = false;
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 3000);
             }
         } else {
             keyPadNumberPressed(view);
@@ -122,12 +131,17 @@ public class DSSecureLockScreen extends Activity implements OnClickListener {
             mStatusText.setTextColor(Color.GREEN);
             mStatusText.setText("Correct");
             DSApplication.getInstance().isLocked = false;
-            finish();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 3000);
+
         } else {
             mStatusText.setTextColor(Color.RED);
             mStatusText.setText("Wrong PIN. Keypad Locked");
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
+            mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mPasswordInputField.setText("");

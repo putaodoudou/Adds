@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import com.adds.Listeners.ExpandableListChildClickListener;
 import com.adds.R;
 import com.adds.adapters.DSExpandableListviewAdapter;
+import com.adds.application.DSApplication;
 import com.adds.authentication.DSPermissionsHelper;
 import com.adds.authentication.DSPermissionsHelper.PermissionsCallback;
 import com.adds.database.DSDataBaseHelper;
@@ -99,6 +100,16 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
     @Override
     public void onResume() {
         super.onResume();
+        if (DSApplication.getInstance().isLocked) {
+            Intent lockScreenIntent = new Intent(this, DSSecureLockScreen.class);
+            startActivity(lockScreenIntent);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        DSApplication.getInstance().isLocked = true;
     }
 
     @Override
