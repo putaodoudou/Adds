@@ -1,6 +1,7 @@
 package com.adds.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.adds.R;
 import com.adds.modalClasses.DSDisplayDataModal;
 import com.adds.userInterface.applicationUI.DSDashBoard;
 import com.adds.userInterface.customViews.DSRoundedLetterView;
+import com.adds.userInterface.uiHelper.DSUiUtils;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -95,7 +97,7 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
 
         DSDisplayDataModal data = mHeaderModal.get(groupPosition);
         holder.groupName.setText(data.getData());
-        holder.groupIcon.setImageDrawable(data.getDrawable());
+        holder.groupIcon.setImageDrawable(DSUiUtils.colourDrawable(data.getDrawable(), ContextCompat.getColor(mContext, R.color.colorAccent)));
 
         return convertView;
     }
@@ -110,7 +112,9 @@ public class DSExpandableListviewAdapter extends BaseExpandableListAdapter {
         }
         holder = (ViewHolder) convertView.getTag();
         holder.childIcon.setBackgroundColor(getRandomColor());
-        holder.childIcon.setTitleText(mChildModal.get(groupPosition).get(childPosition).substring(0, 1).toUpperCase());
+        if (!mChildModal.get(groupPosition).get(childPosition).isEmpty()) {
+            holder.childIcon.setTitleText(mChildModal.get(groupPosition).get(childPosition).substring(0, 1).toUpperCase());
+        }
         holder.childName.setText(mChildModal.get(groupPosition).get(childPosition));
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

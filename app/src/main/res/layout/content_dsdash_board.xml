@@ -10,30 +10,10 @@
     tools:context="com.adds.userInterface.applicationUI.DSDashBoard"
     tools:showIn="@layout/app_bar_dsdash_board">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="10dp"
-        card_view:cardBackgroundColor="@color/white"
-        card_view:cardCornerRadius="3dp"
-        card_view:cardElevation="4dp">
+        android:layout_height="match_parent" />
 
-
-        <FrameLayout
-            android:id="@+id/content_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"></FrameLayout>
-
-        <ExpandableListView
-            android:id="@+id/expandable_lv"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:divider="@null"
-            android:groupIndicator="@null" />
-
-    </android.support.v7.widget.CardView>
 </LinearLayout>

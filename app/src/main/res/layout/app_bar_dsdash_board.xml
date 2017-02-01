@@ -46,9 +46,9 @@
                 android:layout_marginRight="@dimen/_5sdp"
                 android:layout_marginTop="10dp"
                 fab:menu_animationDelayPerItem="0"
-                fab:menu_colorNormal="#FFB805"
-                fab:menu_colorPressed="#F2AB00"
-                fab:menu_colorRipple="#D99200"
+                fab:menu_colorNormal="#00c3d9"
+                fab:menu_colorPressed="#0098d9"
+                fab:menu_colorRipple="#007bd9"
                 fab:menu_labels_hideAnimation="@anim/jump_to_down"
                 fab:menu_labels_showAnimation="@anim/jump_from_down"
                 fab:menu_labels_style="@style/MenuLabelsStyle"
@@ -59,7 +59,7 @@
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_edit"
+                    android:src="@drawable/ic_account_balance_black_48dp"
                     fab:fab_label="Bank details" />
 
                 <com.adds.userInterface.customViews.DSFab.FloatingActionButton
@@ -67,7 +67,7 @@
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_edit"
+                    android:src="@drawable/ic_credit_card_black_48dp"
                     fab:fab_label="Card details" />
 
                 <com.adds.userInterface.customViews.DSFab.FloatingActionButton
@@ -75,7 +75,7 @@
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_edit"
+                    android:src="@drawable/ic_account_circle_black_48dp"
                     fab:fab_label="Login details" />
 
                 <com.adds.userInterface.customViews.DSFab.FloatingActionButton
@@ -83,7 +83,7 @@
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_edit"
+                    android:src="@drawable/ic_event_note_black_48dp"
                     fab:fab_label="Other details" />
 
             </com.adds.userInterface.customViews.DSFab.FloatingActionMenu>

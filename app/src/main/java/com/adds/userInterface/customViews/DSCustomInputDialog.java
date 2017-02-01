@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adds.R;
 import com.adds.helpers.DSModalSelectionHelper;
@@ -106,13 +107,15 @@ public class DSCustomInputDialog extends DialogFragment {
                     List<String> dataList = getListviewData(mDataList.size());
                     if (!isAllFieldsAreFilled) {
                         //ShowPopup
-                        dismiss();
+                        Toast.makeText(mContext, "All fields are mandatory", Toast.LENGTH_LONG).show();
+
                         return;
                     }
+                    long result = 0;
                     switch (mDialogType) {
                         case 1:
                             try {
-                                DSModalSelectionHelper.encryptBankModalData(dataList, mContext);
+                                result = DSModalSelectionHelper.encryptBankModalData(dataList, mContext);
                             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
                                     | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
                                 e.printStackTrace();
@@ -120,7 +123,7 @@ public class DSCustomInputDialog extends DialogFragment {
                             break;
                         case 2:
                             try {
-                                DSModalSelectionHelper.encryptCardData(dataList, mContext);
+                                result = DSModalSelectionHelper.encryptCardData(dataList, mContext);
                             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
                                     | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
                                 e.printStackTrace();
@@ -128,7 +131,7 @@ public class DSCustomInputDialog extends DialogFragment {
                             break;
                         case 3:
                             try {
-                                DSModalSelectionHelper.encryptLoginData(dataList, mContext);
+                                result = DSModalSelectionHelper.encryptLoginData(dataList, mContext);
                             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
                                     | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
                                 e.printStackTrace();
@@ -136,7 +139,7 @@ public class DSCustomInputDialog extends DialogFragment {
                             break;
                         case 4:
                             try {
-                                DSModalSelectionHelper.encryptOtherData(dataList, mContext);
+                                result = DSModalSelectionHelper.encryptOtherData(dataList, mContext);
                             } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | BadPaddingException
                                     | IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException | IOException | UnrecoverableKeyException e) {
                                 e.printStackTrace();
@@ -144,6 +147,13 @@ public class DSCustomInputDialog extends DialogFragment {
                             break;
                         default:
                             break;
+                    }
+
+                    if (result == -1) {
+                        //show error
+                        Toast.makeText(mContext, "error occured", Toast.LENGTH_LONG).show();
+                    } else {
+                        dismiss();
                     }
                 }
             });

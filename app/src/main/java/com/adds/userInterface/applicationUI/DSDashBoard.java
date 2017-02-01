@@ -1,14 +1,13 @@
 package com.adds.userInterface.applicationUI;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,21 +16,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 
+import com.adds.Listeners.DetailAddListener;
 import com.adds.Listeners.ExpandableListChildClickListener;
 import com.adds.R;
-import com.adds.adapters.DSExpandableListviewAdapter;
 import com.adds.application.DSApplication;
 import com.adds.authentication.DSPermissionsHelper;
 import com.adds.authentication.DSPermissionsHelper.PermissionsCallback;
-import com.adds.database.DSDataBaseHelper;
-import com.adds.database.DSDatabaseFieldNames;
 import com.adds.helpers.DSModalSelectionHelper;
 import com.adds.modalClasses.DSBankAccModal;
 import com.adds.modalClasses.DSCardModal;
-import com.adds.modalClasses.DSDisplayDataModal;
 import com.adds.modalClasses.DSLoginPasswordModal;
 import com.adds.modalClasses.DSOthersModal;
 import com.adds.userInterface.customViews.DSCustomInputDialog;
@@ -50,10 +45,9 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSelectedListener, PermissionsCallback, ExpandableListChildClickListener {
+public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSelectedListener, PermissionsCallback, ExpandableListChildClickListener,
+        DetailAddListener {
 
-    private ExpandableListView mExpListView;
-    private DSExpandableListviewAdapter mExpandableListAdapter;
     private DSPermissionsHelper mPermissionsHelper;
 
     private FloatingActionMenu mFabMenus;
@@ -61,6 +55,8 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
     private FloatingActionButton mAddCardData;
     private FloatingActionButton mAddLoginData;
     private FloatingActionButton mAddOtherData;
+
+    private FrameLayout mFrameLayout;
 
     private Handler mUiHandler = new Handler();
 
@@ -71,21 +67,18 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
             switch (v.getId()) {
                 case R.id.fab1:
                     mSelectedMenu = 1;
-                    callPopupMethod();
                     break;
                 case R.id.fab2:
                     mSelectedMenu = 2;
-                    callPopupMethod();
                     break;
                 case R.id.fab3:
                     mSelectedMenu = 3;
-                    callPopupMethod();
                     break;
                 case R.id.fab4:
                     mSelectedMenu = 4;
-                    callPopupMethod();
                     break;
             }
+            callPopupMethod();
         }
     };
 
@@ -100,16 +93,27 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
     @Override
     public void onResume() {
         super.onResume();
-        if (DSApplication.getInstance().isLocked) {
+        if (!DSApplication.getInstance().isUnLocked()) {
             Intent lockScreenIntent = new Intent(this, DSSecureLockScreen.class);
-            startActivity(lockScreenIntent);
+            startActivityForResult(lockScreenIntent, 102);
         }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        DSApplication.getInstance().isLocked = true;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 102) {
+            if (resultCode == Activity.RESULT_OK) {
+                DSApplication.getInstance().setIsUnLocked(true);
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DSApplication.getInstance().setIsUnLocked(false);
+
     }
 
     @Override
@@ -127,8 +131,12 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
         mAddLoginData = (FloatingActionButton) findViewById(R.id.fab3);
         mAddOtherData = (FloatingActionButton) findViewById(R.id.fab4);
 
+        mFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+
+
         initDrawerAndNavigation(toolbar);
-        setDashBoardListData();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new DSExpandableListFragment(), null).commit();
     }
 
     private void initDrawerAndNavigation(Toolbar toolbar) {
@@ -140,99 +148,6 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private void setDashBoardListData() {
-//        if (DSSharedPreferencUtils.getBooleanPref("SAVED_DATA", this)) {
-        //UI elements
-        mExpListView = (ExpandableListView) findViewById(R.id.expandable_lv);
-
-        ArrayList<DSDisplayDataModal> headerModal = new ArrayList<>();
-        DSDisplayDataModal modal1 = new DSDisplayDataModal();
-        DSDisplayDataModal modal2 = new DSDisplayDataModal();
-        DSDisplayDataModal modal3 = new DSDisplayDataModal();
-        DSDisplayDataModal modal4 = new DSDisplayDataModal();
-        headerModal.add(modal1);
-        headerModal.add(modal2);
-        headerModal.add(modal3);
-        headerModal.add(modal4);
-        modal1.setDisplayData("Bank account details");
-        modal1.setDrawable(ContextCompat.getDrawable(this, R.drawable.ic_account_balance_black_48dp));
-        modal2.setDisplayData("Credit and Debit card details ");
-        modal2.setDrawable(ContextCompat.getDrawable(this, R.drawable.ic_credit_card_black_48dp));
-        modal3.setDisplayData("Login credential details");
-        modal3.setDrawable(ContextCompat.getDrawable(this, R.drawable.ic_account_circle_black_48dp));
-        modal4.setDisplayData("Other secure datas");
-        modal4.setDrawable(ContextCompat.getDrawable(this, R.drawable.ic_event_note_black_48dp));
-
-        ArrayList<ArrayList<String>> childModal = new ArrayList<>();
-        DSDataBaseHelper dataBaseHelper = new DSDataBaseHelper(this);
-        Cursor cursor = dataBaseHelper.selectAllBankName();
-        ArrayList<String> dataModals1 = new ArrayList<>();
-        if (cursor != null && cursor.getCount() != 0) {
-            if (cursor.moveToFirst()) {
-                do {
-                    dataModals1.add(cursor.getString(cursor.getColumnIndex(DSDatabaseFieldNames.ACC_NAME)));
-                } while (cursor.moveToNext());
-            }
-        }
-        cursor.close();
-        childModal.add(dataModals1);
-
-        Cursor cursor2 = dataBaseHelper.selectAllCardName();
-        ArrayList<String> dataModals2 = new ArrayList<>();
-        if (cursor2 != null && cursor2.getCount() != 0) {
-            if (cursor2.moveToFirst()) {
-                do {
-                    dataModals2.add(cursor2.getString(cursor2.getColumnIndex(DSDatabaseFieldNames.CARD_NAME)));
-                } while (cursor2.moveToNext());
-            }
-        }
-        cursor2.close();
-        childModal.add(dataModals2);
-
-        Cursor cursor3 = dataBaseHelper.selectAllLoginName();
-        ArrayList<String> dataModals3 = new ArrayList<>();
-        if (cursor3 != null && cursor3.getCount() != 0) {
-            if (cursor3.moveToFirst()) {
-                do {
-                    dataModals3.add(cursor3.getString(cursor3.getColumnIndex(DSDatabaseFieldNames.LOGIN_NAME)));
-                } while (cursor3.moveToNext());
-            }
-        }
-        cursor3.close();
-        childModal.add(dataModals3);
-
-        Cursor cursor4 = dataBaseHelper.selectAllOtherName();
-        ArrayList<String> dataModals4 = new ArrayList<>();
-        if (cursor4 != null && cursor4.getCount() != 0) {
-            if (cursor4.moveToFirst()) {
-                do {
-                    dataModals4.add(cursor4.getString(cursor4.getColumnIndex(DSDatabaseFieldNames.OTHER_DATA_NAME)));
-                } while (cursor4.moveToNext());
-            }
-        }
-        cursor4.close();
-        childModal.add(dataModals4);
-
-        mExpandableListAdapter = new DSExpandableListviewAdapter(this, headerModal, childModal);
-        mExpListView.setAdapter(mExpandableListAdapter);
-
-        mExpListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                if (!parent.isGroupExpanded(groupPosition)) {
-                    parent.expandGroup(groupPosition);
-                } else {
-                    parent.collapseGroup(groupPosition);
-                }
-                return true;
-            }
-        });
-
-//        } else {
-//            todo show fallback message
-//        }
     }
 
     @Override
@@ -280,7 +195,11 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (getSupportFragmentManager().getFragments().size() == 1) {
+
+            } else {
+                //show exit
+            }
         }
     }
 
@@ -319,9 +238,9 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
             startActivity(intent);
 //            DSSecureLockScreen lockScreenFragment = new DSSecureLockScreen();
 //            getSupportFragmentManager().beginTransaction().add(R.id.content_frame, lockScreenFragment, null).commit();
-//            FrameLayout frameLayout = (FrameLayout) findViewById(R.id.content_frame);
+//            FrameLayout mFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
 //            mExpListView.setVisibility(View.GONE);
-//            frameLayout.setVisibility(View.VISIBLE);
+//            mFrameLayout.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.nav_slideshow) {
 
@@ -398,8 +317,15 @@ public class DSDashBoard extends AppCompatActivity implements OnNavigationItemSe
         DSDecryptedDataViewerFragment fragment = new DSDecryptedDataViewerFragment();
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, null).commit();
-        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        mExpListView.setVisibility(View.GONE);
-        frameLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onAddDetailSucces() {
+
+    }
+
+    @Override
+    public void onAddDetailFailed() {
+
     }
 }

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 
 import com.adds.R;
 import com.github.paolorotolo.appintro.AppIntro;
@@ -16,20 +17,28 @@ public class DSIntroPage extends AppIntro {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showStatusBar(false);
-        addSlide(AppIntroFragment.newInstance("Super Smart", "The worlds first super smart data securing application", R.drawable.ic_skip_white, getResources().getColor(R.color.material_black)));
-        addSlide(AppIntroFragment.newInstance("Secure Storing", "Stores data in your own phone itself", R.drawable.secure, getResources().getColor(R.color.material_blue_green)));
-        addSlide(AppIntroFragment.newInstance("Complete Protection", "blalll blaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", R.drawable.ic_skip_white, getResources().getColor(R.color.material_violet_light)));
-        addSlide(AppIntroFragment.newInstance("All Done", "Let :)", R.drawable.ic_skip_white, getResources().getColor(R.color.material_red_light)));
+        addSlide(AppIntroFragment.newInstance("SMART, SECURE & SUPERB", "The worlds first super smart secure data storing application", R.drawable.ic_smart,
+                ContextCompat.getColor(this, R.color.white), ContextCompat.getColor(this, R.color.black), ContextCompat.getColor(this, R.color.black)));
+        addSlide(AppIntroFragment.newInstance("SECURE DATA STORING", "Stores data in your phone itself, no need to wory about unknown servers", R.drawable.ic_storage,
+                ContextCompat.getColor(this, R.color.white), ContextCompat.getColor(this, R.color.black), ContextCompat.getColor(this, R.color.black)));
+        addSlide(AppIntroFragment.newInstance("COMPLETE DATA PROTECTION", "All your data is 256-bit AES encrypted and securely stored", R.drawable.ic_secure,
+                ContextCompat.getColor(this, R.color.white), ContextCompat.getColor(this, R.color.black), ContextCompat.getColor(this, R.color.black)));
+        addSlide(AppIntroFragment.newInstance("YOU ARE ALL SET TO GO", "Press done and never look back, It's all good", R.drawable.ic_all_done,
+                ContextCompat.getColor(this, R.color.white), ContextCompat.getColor(this, R.color.black), ContextCompat.getColor(this, R.color.black)));
 
         // OPTIONAL METHODS
         // Override bar/separator color.
-        setBarColor(Color.parseColor("#3F51B5"));
-        setSeparatorColor(Color.parseColor("#ffffff"));
+        setBarColor(Color.parseColor("#ffffff"));
+        setSeparatorColor(Color.parseColor("#000000"));
 
         // Hide Skip/Done button.
         showSkipButton(true);
-
+        setColorSkipButton(ContextCompat.getColor(this, R.color.black));
+        setColorTransitionsEnabled(true);
         setProgressButtonEnabled(true);
+        setProgressIndicator();
+        setNextArrowColor(ContextCompat.getColor(this, R.color.black));
+        setColorDoneText(ContextCompat.getColor(this, R.color.black));
 
     }
 
@@ -48,9 +57,6 @@ public class DSIntroPage extends AppIntro {
     @Override
     public void onSlideChanged(@Nullable Fragment oldFragment, @Nullable Fragment newFragment) {
         super.onSlideChanged(oldFragment, newFragment);
-        // Do something when the slide changes.
-        setSlideOverAnimation();
-        setBarColor(Color.parseColor("#212121"));
     }
 
     private void callDashBoardActivity() {

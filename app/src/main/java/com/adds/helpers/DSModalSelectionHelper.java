@@ -37,7 +37,7 @@ public class DSModalSelectionHelper implements DSModalFieldLabels {
         return DSCryptographyHelper.encryptUserDatas(data, context);
     }
 
-    public static void encryptBankModalData(List<String> dataList, Context context) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, IOException, UnrecoverableKeyException {
+    public static long encryptBankModalData(List<String> dataList, Context context) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, IOException, UnrecoverableKeyException {
         DSDataBaseHelper dataBaseHelper = new DSDataBaseHelper(context);
 
         DSBankAccModal bankAccModal = new DSBankAccModal();
@@ -48,7 +48,8 @@ public class DSModalSelectionHelper implements DSModalFieldLabels {
         bankAccModal.setmIfscCode(dataList.get(4));
         bankAccModal.setmRemarks(dataList.get(5));
 
-        dataBaseHelper.insertToTableBankAcc(bankAccModal);
+        long result = dataBaseHelper.insertToTableBankAcc(bankAccModal);
+        return result;
     }
 
     public static DSBankAccModal getDecryptedBankDetails(String name, Context context) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, IOException, UnrecoverableKeyException {
@@ -71,7 +72,7 @@ public class DSModalSelectionHelper implements DSModalFieldLabels {
         return modal;
     }
 
-    public static void encryptCardData(List<String> dataList, Context context) throws IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, KeyStoreException {
+    public static long encryptCardData(List<String> dataList, Context context) throws IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, KeyStoreException {
         DSDataBaseHelper dataBaseHelper = new DSDataBaseHelper(context);
 
         DSCardModal cardModal = new DSCardModal();
@@ -80,7 +81,8 @@ public class DSModalSelectionHelper implements DSModalFieldLabels {
         cardModal.setmCardPin(dataCheckerAndEncrypter(dataList.get(2), context));
         cardModal.setmCvvCode(dataCheckerAndEncrypter(dataList.get(3), context));
 
-        dataBaseHelper.insertToTableCard(cardModal);
+        long result = dataBaseHelper.insertToTableCard(cardModal);
+        return result;
     }
 
     public static DSCardModal getDecryptedCardDetails(String name, Context context) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, IOException, UnrecoverableKeyException {
@@ -102,7 +104,7 @@ public class DSModalSelectionHelper implements DSModalFieldLabels {
         return modal;
     }
 
-    public static void encryptLoginData(List<String> dataList, Context context) throws IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, KeyStoreException {
+    public static long encryptLoginData(List<String> dataList, Context context) throws IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, KeyStoreException {
         DSDataBaseHelper dataBaseHelper = new DSDataBaseHelper(context);
 
         DSLoginPasswordModal loginPasswordModal = new DSLoginPasswordModal();
@@ -110,7 +112,8 @@ public class DSModalSelectionHelper implements DSModalFieldLabels {
         loginPasswordModal.setmUserName(dataCheckerAndEncrypter(dataList.get(1), context));
         loginPasswordModal.setmPassword(dataCheckerAndEncrypter(dataList.get(2), context));
 
-        dataBaseHelper.insertToTableLogin(loginPasswordModal);
+        long result = dataBaseHelper.insertToTableLogin(loginPasswordModal);
+        return result;
     }
 
     public static DSLoginPasswordModal getDecryptedLoginDetails(String name, Context context) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, IOException, UnrecoverableKeyException {
@@ -130,14 +133,15 @@ public class DSModalSelectionHelper implements DSModalFieldLabels {
         return modal;
     }
 
-    public static void encryptOtherData(List<String> dataList, Context context) throws IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, KeyStoreException {
+    public static long encryptOtherData(List<String> dataList, Context context) throws IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, KeyStoreException {
         DSDataBaseHelper dataBaseHelper = new DSDataBaseHelper(context);
 
         DSOthersModal othersModal = new DSOthersModal();
         othersModal.setmName(dataList.get(0));
         othersModal.setmData(dataCheckerAndEncrypter(dataList.get(1), context));
 
-        dataBaseHelper.insertToTableOther(othersModal);
+        long result = dataBaseHelper.insertToTableOther(othersModal);
+        return result;
     }
 
     public static DSOthersModal getDecryptedOtherDetails(String name, Context context) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, IOException, UnrecoverableKeyException {

@@ -119,4 +119,5 @@ public class DSDecryptedDataViewerFragment extends Fragment {
         fieldOne.setText(modal.getmName());
         fieldTwo.setText(modal.getmData());
     }
+
 }

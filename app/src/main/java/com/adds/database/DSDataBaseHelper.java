@@ -72,7 +72,7 @@ public class DSDataBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    public void insertToTableBankAcc(DSBankAccModal modal) {
+    public long insertToTableBankAcc(DSBankAccModal modal) {
         String uniqueName = modal.getmAccountName();
         String bankName = modal.getmBankName();
         String accNo = modal.getmAccNo();
@@ -90,11 +90,12 @@ public class DSDataBaseHelper extends SQLiteOpenHelper {
         values.put(DSDatabaseFieldNames.IFSC_CODE, ifscCode);
         values.put(DSDatabaseFieldNames.REMARKS, remarks);
 
-        sqLiteDatabase.insert(TABLE_BANK_ACC_DATA, null, values);
+        long rowId = sqLiteDatabase.insert(TABLE_BANK_ACC_DATA, null, values);
         sqLiteDatabase.close();
+        return rowId;
     }
 
-    public void insertToTableCard(DSCardModal modal) {
+    public long insertToTableCard(DSCardModal modal) {
         String uniqueName = modal.getmCardName();
         String cardNo = modal.getmCardNo();
         String cardPin = modal.getmCardPin();
@@ -108,11 +109,12 @@ public class DSDataBaseHelper extends SQLiteOpenHelper {
         values.put(DSDatabaseFieldNames.CARD_PIN, cardPin);
         values.put(DSDatabaseFieldNames.CVV_CODE, cvvCode);
 
-        sqLiteDatabase.insert(TABLE_CARD_DATA, null, values);
+        long rowId = sqLiteDatabase.insert(TABLE_CARD_DATA, null, values);
         sqLiteDatabase.close();
+        return rowId;
     }
 
-    public void insertToTableLogin(DSLoginPasswordModal modal) {
+    public long insertToTableLogin(DSLoginPasswordModal modal) {
         String uniqueName = modal.getmLoginName();
         String userName = modal.getmUserName();
         String password = modal.getmPassword();
@@ -124,11 +126,12 @@ public class DSDataBaseHelper extends SQLiteOpenHelper {
         values.put(DSDatabaseFieldNames.USERNAME, userName);
         values.put(DSDatabaseFieldNames.PASSWORD, password);
 
-        sqLiteDatabase.insert(TABLE_LOGIN_DATA, null, values);
+        long rowId = sqLiteDatabase.insert(TABLE_LOGIN_DATA, null, values);
         sqLiteDatabase.close();
+        return rowId;
     }
 
-    public void insertToTableOther(DSOthersModal modal) {
+    public long insertToTableOther(DSOthersModal modal) {
         String uniqueName = modal.getmName();
         String data = modal.getmData();
 
@@ -138,8 +141,9 @@ public class DSDataBaseHelper extends SQLiteOpenHelper {
         values.put(DSDatabaseFieldNames.OTHER_DATA_NAME, uniqueName);
         values.put(DSDatabaseFieldNames.OTHER_DATA, data);
 
-        sqLiteDatabase.insert(TABLE_OTHER_DATA, null, values);
+        long rowId = sqLiteDatabase.insert(TABLE_OTHER_DATA, null, values);
         sqLiteDatabase.close();
+        return rowId;
     }
 
     public Cursor selectBankDetails(String uniqueName) {
