@@ -108,7 +108,6 @@ public class DSCustomInputDialog extends DialogFragment {
                     if (!isAllFieldsAreFilled) {
                         //ShowPopup
                         Toast.makeText(mContext, "All fields are mandatory", Toast.LENGTH_LONG).show();
-
                         return;
                     }
                     long result = 0;
